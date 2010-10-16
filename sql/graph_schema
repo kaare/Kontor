@@ -9,17 +9,16 @@ use Kontor::Schema;
 
 use SQL::Translator;
 
-  my $schema = Kontor::Schema->connect('dbi:Pg:dbname=kontor') or die "can't connect to Schema";
-  my $translator = SQL::Translator->new(
-      parser        => 'SQL::Translator::Parser::DBIx::Class',
-      parser_args   => { package => $schema },
-      producer      => 'Diagram',
-      producer_args => {
-          out_file       => 'schema.png',
-          output_type    => 'png',
-          title          => 'Kontor Schema',
-      },
-  ) or die SQL::Translator->error;
+my $schema = Kontor::Schema->connect('dbi:Pg:dbname=kontor') or die "can't connect to Schema";
+my $translator = SQL::Translator->new(
+	parser        => 'SQL::Translator::Parser::DBIx::Class',
+	parser_args   => { package => $schema },
+	producer      => 'GraphViz',
+	producer_args => {
+		out_file		=> 'schema.png',
+		output_type		=> 'png',
+		title			=> 'Kontor Schema',
+	},
+) or die SQL::Translator->error;
 
-  $translator->translate;
-
+$translator->translate;

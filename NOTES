@@ -1,2 +1,8 @@
-- Create Schema model
+# Create Schema
+perl -MDBIx::Class::Schema::Loader=make_schema_at,dump_to_dir:./lib -e 'make_schema_at("Schema", { relationships => 1 }, [ "dbi:Pg:dbname=kontor" ])'      
+dbicdump -o db_schema=contact  Kontor::Schema::Contact "dbi:Pg:dbname=kontor"
+dbicdump -o db_schema=product  Kontor::Schema::Product "dbi:Pg:dbname=kontor"
+dbicdump -o db_schema=gl       Kontor::Schema::Gl      "dbi:Pg:dbname=kontor"
+
+# Create Schema model
 script/kontor_create.pl model Kontor DBIC::Schema Kontor::Schema create=static dbi:Pg:dbname=kontor
