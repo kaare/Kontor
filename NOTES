@@ -4,5 +4,7 @@ dbicdump -o db_schema=contact  Kontor::Schema::Contact "dbi:Pg:dbname=kontor"
 dbicdump -o db_schema=product  Kontor::Schema::Product "dbi:Pg:dbname=kontor"
 dbicdump -o db_schema=gl       Kontor::Schema::Gl      "dbi:Pg:dbname=kontor"
 
+perl -pi -e 's/::(\w+)::(Result)/::$2::$1/;$ns = lc $1 if $1;s/->table\("(\w+)"\)/->table\("$ns.$1"\)/' */*
+
 # Create Schema model
 script/kontor_create.pl model Kontor DBIC::Schema Kontor::Schema create=static dbi:Pg:dbname=kontor
