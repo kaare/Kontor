@@ -6,7 +6,7 @@ CREATE TABLE organisations (
 	id						serial PRIMARY KEY,
 	currency_id				integer NOT NULL REFERENCES gl.currencies,
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 -- Triggers

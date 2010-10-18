@@ -11,7 +11,7 @@ CREATE TABLE vats (
 	sv_coa					integer,
 	pv_coa					integer,
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 -- Triggers

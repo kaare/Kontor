@@ -106,14 +106,14 @@ CREATE TABLE chartofaccounts (
 	currency_id				integer NOT NULL REFERENCES currencies (id),
 	account_nr				text,
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 CREATE TABLE accountsoas (
 	id						serial PRIMARY KEY,
 	coa_id					integer NOT NULL REFERENCES chartofaccounts (id),
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 CREATE TABLE accountvat (
@@ -122,7 +122,7 @@ CREATE TABLE accountvat (
 	vat_id					integer REFERENCES product.vats (id),
 	vat_coa					integer REFERENCES chartofaccounts (id),
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 CREATE TABLE acctgrid (
@@ -133,7 +133,7 @@ CREATE TABLE acctgrid (
 	dim						integer[],
 	currency_id				integer NOT NULL REFERENCES currencies (id),
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 CREATE TABLE balances (
@@ -144,7 +144,7 @@ CREATE TABLE balances (
 	perioddr				numeric DEFAULT 0,
 	periodcr				numeric DEFAULT 0,
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL,
+	modified				timestamp,
 	PRIMARY KEY (ag_id, periodnr)
 );
 
@@ -157,7 +157,7 @@ CREATE TABLE countries (
 	vat_id					integer REFERENCES product.vats (id),
 	currency_id				integer,
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 CREATE TABLE dimensions (
@@ -169,7 +169,7 @@ CREATE TABLE dimensions (
 	dimtable				text,
 	dimcolumn				text,
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 CREATE TABLE batches (
@@ -187,7 +187,7 @@ CREATE TABLE batches (
 	postingdate				date DEFAULT now(),
 	soa_id					integer REFERENCES accountsoas (id),
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 CREATE TABLE batchjournals (
@@ -202,7 +202,7 @@ CREATE TABLE batchjournals (
 	description				text,
 	accountingdate			date,
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 CREATE TABLE journals (
@@ -217,7 +217,7 @@ CREATE TABLE journals (
 	description				text,
 	accountingdate			date,
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 -- Triggers

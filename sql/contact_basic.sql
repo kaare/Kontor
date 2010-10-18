@@ -9,7 +9,7 @@ CREATE TABLE countries (
 	alpha3					varchar(3) UNIQUE,
 	name					varchar(255),
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp NOT NULL
+	modified				timestamp
 );
 
 -- Triggers
