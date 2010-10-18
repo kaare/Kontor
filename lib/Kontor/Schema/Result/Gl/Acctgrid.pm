@@ -1,4 +1,4 @@
-package Kontor::Schema::Gl::Result::Accountsoa;
+package Kontor::Schema::Result::Gl::Acctgrid;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -11,11 +11,11 @@ use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-Kontor::Schema::Gl::Result::Accountsoa
+Kontor::Schema::Result::Gl::Acctgrid
 
 =cut
 
-__PACKAGE__->table("accountsoas");
+__PACKAGE__->table("gl.acctgrid");
 
 =head1 ACCESSORS
 
@@ -24,9 +24,19 @@ __PACKAGE__->table("accountsoas");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
-  sequence: 'gl.accountsoas_id_seq'
+  sequence: 'gl.acctgrid_id_seq'
 
-=head2 coa_id
+=head2 org_id
+
+  data_type: 'integer'
+  is_nullable: 0
+
+=head2 dim
+
+  data_type: 'integer[]'
+  is_nullable: 1
+
+=head2 currency_id
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -52,9 +62,13 @@ __PACKAGE__->add_columns(
     data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
-    sequence          => "gl.accountsoas_id_seq",
+    sequence          => "gl.acctgrid_id_seq",
   },
-  "coa_id",
+  "org_id",
+  { data_type => "integer", is_nullable => 0 },
+  "dim",
+  { data_type => "integer[]", is_nullable => 1 },
+  "currency_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "created",
   {
@@ -70,39 +84,69 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 coa
+=head2 currency
 
 Type: belongs_to
 
-Related object: L<Kontor::Schema::Gl::Result::Chartofaccount>
+Related object: L<Kontor::Schema::Result::Gl::Currency>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "coa",
-  "Kontor::Schema::Gl::Result::Chartofaccount",
-  { id => "coa_id" },
+  "currency",
+  "Kontor::Schema::Result::Gl::Currency",
+  { id => "currency_id" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
-=head2 batches
+=head2 balances
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Batch>
+Related object: L<Kontor::Schema::Result::Gl::Balance>
 
 =cut
 
 __PACKAGE__->has_many(
-  "batches",
-  "Kontor::Schema::Gl::Result::Batch",
-  { "foreign.soa_id" => "self.id" },
+  "balances",
+  "Kontor::Schema::Result::Gl::Balance",
+  { "foreign.ag_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 batchjournals
+
+Type: has_many
+
+Related object: L<Kontor::Schema::Result::Gl::Batchjournal>
+
+=cut
+
+__PACKAGE__->has_many(
+  "batchjournals",
+  "Kontor::Schema::Result::Gl::Batchjournal",
+  { "foreign.ag_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 journals
+
+Type: has_many
+
+Related object: L<Kontor::Schema::Result::Gl::Journal>
+
+=cut
+
+__PACKAGE__->has_many(
+  "journals",
+  "Kontor::Schema::Result::Gl::Journal",
+  { "foreign.ag_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yfoOUezVSYfDRrBFPeQk8w
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IE68TRz5GQMMeMmLXz+KDQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

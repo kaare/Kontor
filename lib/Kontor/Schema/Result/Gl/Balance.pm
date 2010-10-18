@@ -1,4 +1,4 @@
-package Kontor::Schema::Gl::Result::Balance;
+package Kontor::Schema::Result::Gl::Balance;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -11,11 +11,11 @@ use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-Kontor::Schema::Gl::Result::Balance
+Kontor::Schema::Result::Gl::Balance
 
 =cut
 
-__PACKAGE__->table("balances");
+__PACKAGE__->table("gl.balances");
 
 =head1 ACCESSORS
 
@@ -99,13 +99,13 @@ __PACKAGE__->set_primary_key("ag_id", "periodnr");
 
 Type: belongs_to
 
-Related object: L<Kontor::Schema::Gl::Result::Acctgrid>
+Related object: L<Kontor::Schema::Result::Gl::Acctgrid>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "ag",
-  "Kontor::Schema::Gl::Result::Acctgrid",
+  "Kontor::Schema::Result::Gl::Acctgrid",
   { id => "ag_id" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );

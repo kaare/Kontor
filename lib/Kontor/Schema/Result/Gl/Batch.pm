@@ -1,4 +1,4 @@
-package Kontor::Schema::Gl::Result::Batch;
+package Kontor::Schema::Result::Gl::Batch;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -11,11 +11,11 @@ use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-Kontor::Schema::Gl::Result::Batch
+Kontor::Schema::Result::Gl::Batch
 
 =cut
 
-__PACKAGE__->table("batches");
+__PACKAGE__->table("gl.batches");
 
 =head1 ACCESSORS
 
@@ -149,13 +149,13 @@ __PACKAGE__->set_primary_key("id");
 
 Type: belongs_to
 
-Related object: L<Kontor::Schema::Gl::Result::Accountsoa>
+Related object: L<Kontor::Schema::Result::Gl::Accountsoa>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "soa",
-  "Kontor::Schema::Gl::Result::Accountsoa",
+  "Kontor::Schema::Result::Gl::Accountsoa",
   { id => "soa_id" },
   {
     is_deferrable => 1,
@@ -169,13 +169,13 @@ __PACKAGE__->belongs_to(
 
 Type: belongs_to
 
-Related object: L<Kontor::Schema::Gl::Result::Currency>
+Related object: L<Kontor::Schema::Result::Gl::Currency>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "currency",
-  "Kontor::Schema::Gl::Result::Currency",
+  "Kontor::Schema::Result::Gl::Currency",
   { id => "currency_id" },
   {
     is_deferrable => 1,
@@ -189,13 +189,13 @@ __PACKAGE__->belongs_to(
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Batchjournal>
+Related object: L<Kontor::Schema::Result::Gl::Batchjournal>
 
 =cut
 
 __PACKAGE__->has_many(
   "batchjournals",
-  "Kontor::Schema::Gl::Result::Batchjournal",
+  "Kontor::Schema::Result::Gl::Batchjournal",
   { "foreign.batch_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -204,13 +204,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Journal>
+Related object: L<Kontor::Schema::Result::Gl::Journal>
 
 =cut
 
 __PACKAGE__->has_many(
   "journals",
-  "Kontor::Schema::Gl::Result::Journal",
+  "Kontor::Schema::Result::Gl::Journal",
   { "foreign.batch_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );

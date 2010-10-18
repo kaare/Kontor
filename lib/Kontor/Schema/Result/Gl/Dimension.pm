@@ -1,4 +1,4 @@
-package Kontor::Schema::Product::Result::Vat;
+package Kontor::Schema::Result::Gl::Dimension;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -11,11 +11,11 @@ use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-Kontor::Schema::Product::Result::Vat
+Kontor::Schema::Result::Gl::Dimension
 
 =cut
 
-__PACKAGE__->table("vats");
+__PACKAGE__->table("gl.dimensions");
 
 =head1 ACCESSORS
 
@@ -24,42 +24,26 @@ __PACKAGE__->table("vats");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
-  sequence: 'product.vats_id_seq'
+  sequence: 'gl.dimensions_id_seq'
 
-=head2 label
+=head2 org_id
+
+  data_type: 'integer'
+  is_nullable: 0
+
+=head2 dimension
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 dimtable
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 rate
+=head2 dimcolumn
 
-  data_type: 'numeric'
-  is_nullable: 1
-  size: [5,2]
-
-=head2 start_time
-
-  data_type: 'timestamp'
-  is_nullable: 1
-
-=head2 end_time
-
-  data_type: 'timestamp'
-  is_nullable: 1
-
-=head2 country_id
-
-  data_type: 'integer'
-  is_nullable: 1
-
-=head2 sv_coa
-
-  data_type: 'integer'
-  is_nullable: 1
-
-=head2 pv_coa
-
-  data_type: 'integer'
+  data_type: 'text'
   is_nullable: 1
 
 =head2 created
@@ -82,22 +66,16 @@ __PACKAGE__->add_columns(
     data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
-    sequence          => "product.vats_id_seq",
+    sequence          => "gl.dimensions_id_seq",
   },
-  "label",
+  "org_id",
+  { data_type => "integer", is_nullable => 0 },
+  "dimension",
+  { data_type => "integer", is_nullable => 1 },
+  "dimtable",
   { data_type => "text", is_nullable => 1 },
-  "rate",
-  { data_type => "numeric", is_nullable => 1, size => [5, 2] },
-  "start_time",
-  { data_type => "timestamp", is_nullable => 1 },
-  "end_time",
-  { data_type => "timestamp", is_nullable => 1 },
-  "country_id",
-  { data_type => "integer", is_nullable => 1 },
-  "sv_coa",
-  { data_type => "integer", is_nullable => 1 },
-  "pv_coa",
-  { data_type => "integer", is_nullable => 1 },
+  "dimcolumn",
+  { data_type => "text", is_nullable => 1 },
   "created",
   {
     data_type     => "timestamp",
@@ -111,8 +89,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fBOrQ9mgOhS5CVVFPHmZ9A
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CJ+rYg/Z6fShur4dlQ/8RQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

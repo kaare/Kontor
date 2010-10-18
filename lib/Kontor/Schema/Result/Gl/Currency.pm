@@ -1,4 +1,4 @@
-package Kontor::Schema::Gl::Result::Currency;
+package Kontor::Schema::Result::Gl::Currency;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -11,11 +11,11 @@ use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-Kontor::Schema::Gl::Result::Currency
+Kontor::Schema::Result::Gl::Currency
 
 =cut
 
-__PACKAGE__->table("currencies");
+__PACKAGE__->table("gl.currencies");
 
 =head1 ACCESSORS
 
@@ -111,13 +111,13 @@ __PACKAGE__->set_primary_key("id");
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Acctgrid>
+Related object: L<Kontor::Schema::Result::Gl::Acctgrid>
 
 =cut
 
 __PACKAGE__->has_many(
   "acctgrids",
-  "Kontor::Schema::Gl::Result::Acctgrid",
+  "Kontor::Schema::Result::Gl::Acctgrid",
   { "foreign.currency_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -126,13 +126,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Batch>
+Related object: L<Kontor::Schema::Result::Gl::Batch>
 
 =cut
 
 __PACKAGE__->has_many(
   "batches",
-  "Kontor::Schema::Gl::Result::Batch",
+  "Kontor::Schema::Result::Gl::Batch",
   { "foreign.currency_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -141,13 +141,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Chartofaccount>
+Related object: L<Kontor::Schema::Result::Gl::Chartofaccount>
 
 =cut
 
 __PACKAGE__->has_many(
   "chartofaccounts",
-  "Kontor::Schema::Gl::Result::Chartofaccount",
+  "Kontor::Schema::Result::Gl::Chartofaccount",
   { "foreign.currency_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -156,13 +156,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Rate>
+Related object: L<Kontor::Schema::Result::Gl::Rate>
 
 =cut
 
 __PACKAGE__->has_many(
   "rates",
-  "Kontor::Schema::Gl::Result::Rate",
+  "Kontor::Schema::Result::Gl::Rate",
   { "foreign.currency_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );

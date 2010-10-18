@@ -1,4 +1,4 @@
-package Kontor::Schema::Gl::Result::Rate;
+package Kontor::Schema::Result::Gl::Rate;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -11,11 +11,11 @@ use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-Kontor::Schema::Gl::Result::Rate
+Kontor::Schema::Result::Gl::Rate
 
 =cut
 
-__PACKAGE__->table("rates");
+__PACKAGE__->table("gl.rates");
 
 =head1 ACCESSORS
 
@@ -124,13 +124,13 @@ __PACKAGE__->set_primary_key("id");
 
 Type: belongs_to
 
-Related object: L<Kontor::Schema::Gl::Result::Currency>
+Related object: L<Kontor::Schema::Result::Gl::Currency>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "currency",
-  "Kontor::Schema::Gl::Result::Currency",
+  "Kontor::Schema::Result::Gl::Currency",
   { id => "currency_id" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );

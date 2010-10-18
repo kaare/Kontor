@@ -1,4 +1,4 @@
-package Kontor::Schema::Gl::Result::Dimension;
+package Kontor::Schema::Result::Contact::Country;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -11,11 +11,11 @@ use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-Kontor::Schema::Gl::Result::Dimension
+Kontor::Schema::Result::Contact::Country
 
 =cut
 
-__PACKAGE__->table("dimensions");
+__PACKAGE__->table("contact.countries");
 
 =head1 ACCESSORS
 
@@ -24,27 +24,25 @@ __PACKAGE__->table("dimensions");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
-  sequence: 'gl.dimensions_id_seq'
+  sequence: 'contact.countries_id_seq'
 
-=head2 org_id
+=head2 alpha2
 
-  data_type: 'integer'
-  is_nullable: 0
-
-=head2 dimension
-
-  data_type: 'integer'
+  data_type: 'varchar'
   is_nullable: 1
+  size: 2
 
-=head2 dimtable
+=head2 alpha3
 
-  data_type: 'text'
+  data_type: 'varchar'
   is_nullable: 1
+  size: 3
 
-=head2 dimcolumn
+=head2 name
 
-  data_type: 'text'
+  data_type: 'varchar'
   is_nullable: 1
+  size: 255
 
 =head2 created
 
@@ -66,16 +64,14 @@ __PACKAGE__->add_columns(
     data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
-    sequence          => "gl.dimensions_id_seq",
+    sequence          => "contact.countries_id_seq",
   },
-  "org_id",
-  { data_type => "integer", is_nullable => 0 },
-  "dimension",
-  { data_type => "integer", is_nullable => 1 },
-  "dimtable",
-  { data_type => "text", is_nullable => 1 },
-  "dimcolumn",
-  { data_type => "text", is_nullable => 1 },
+  "alpha2",
+  { data_type => "varchar", is_nullable => 1, size => 2 },
+  "alpha3",
+  { data_type => "varchar", is_nullable => 1, size => 3 },
+  "name",
+  { data_type => "varchar", is_nullable => 1, size => 255 },
   "created",
   {
     data_type     => "timestamp",
@@ -87,10 +83,12 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->add_unique_constraint("countries_alpha3_key", ["alpha3"]);
+__PACKAGE__->add_unique_constraint("countries_alpha2_key", ["alpha2"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CJ+rYg/Z6fShur4dlQ/8RQ
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:47:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RZbQg/BLRtHNZ8g84FJilg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

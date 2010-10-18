@@ -1,4 +1,4 @@
-package Kontor::Schema::Gl::Result::Accountvat;
+package Kontor::Schema::Result::Gl::Accountvat;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -11,11 +11,11 @@ use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-Kontor::Schema::Gl::Result::Accountvat
+Kontor::Schema::Result::Gl::Accountvat
 
 =cut
 
-__PACKAGE__->table("accountvat");
+__PACKAGE__->table("gl.accountvat");
 
 =head1 ACCESSORS
 
@@ -89,13 +89,13 @@ __PACKAGE__->set_primary_key("id");
 
 Type: belongs_to
 
-Related object: L<Kontor::Schema::Gl::Result::Chartofaccount>
+Related object: L<Kontor::Schema::Result::Gl::Chartofaccount>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "coa",
-  "Kontor::Schema::Gl::Result::Chartofaccount",
+  "Kontor::Schema::Result::Gl::Chartofaccount",
   { id => "coa_id" },
   {
     is_deferrable => 1,
@@ -109,13 +109,13 @@ __PACKAGE__->belongs_to(
 
 Type: belongs_to
 
-Related object: L<Kontor::Schema::Gl::Result::Chartofaccount>
+Related object: L<Kontor::Schema::Result::Gl::Chartofaccount>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "vat_coa",
-  "Kontor::Schema::Gl::Result::Chartofaccount",
+  "Kontor::Schema::Result::Gl::Chartofaccount",
   { id => "vat_coa" },
   {
     is_deferrable => 1,

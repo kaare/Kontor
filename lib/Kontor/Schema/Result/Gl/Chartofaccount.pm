@@ -1,4 +1,4 @@
-package Kontor::Schema::Gl::Result::Chartofaccount;
+package Kontor::Schema::Result::Gl::Chartofaccount;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -11,11 +11,11 @@ use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-Kontor::Schema::Gl::Result::Chartofaccount
+Kontor::Schema::Result::Gl::Chartofaccount
 
 =cut
 
-__PACKAGE__->table("chartofaccounts");
+__PACKAGE__->table("gl.chartofaccounts");
 
 =head1 ACCESSORS
 
@@ -103,13 +103,13 @@ __PACKAGE__->set_primary_key("id");
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Accountsoa>
+Related object: L<Kontor::Schema::Result::Gl::Accountsoa>
 
 =cut
 
 __PACKAGE__->has_many(
   "accountsoas",
-  "Kontor::Schema::Gl::Result::Accountsoa",
+  "Kontor::Schema::Result::Gl::Accountsoa",
   { "foreign.coa_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -118,13 +118,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Accountvat>
+Related object: L<Kontor::Schema::Result::Gl::Accountvat>
 
 =cut
 
 __PACKAGE__->has_many(
   "accountvat_coas",
-  "Kontor::Schema::Gl::Result::Accountvat",
+  "Kontor::Schema::Result::Gl::Accountvat",
   { "foreign.coa_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -133,13 +133,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Accountvat>
+Related object: L<Kontor::Schema::Result::Gl::Accountvat>
 
 =cut
 
 __PACKAGE__->has_many(
   "accountvat_vat_coas",
-  "Kontor::Schema::Gl::Result::Accountvat",
+  "Kontor::Schema::Result::Gl::Accountvat",
   { "foreign.vat_coa" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -148,13 +148,13 @@ __PACKAGE__->has_many(
 
 Type: belongs_to
 
-Related object: L<Kontor::Schema::Gl::Result::Currency>
+Related object: L<Kontor::Schema::Result::Gl::Currency>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "currency",
-  "Kontor::Schema::Gl::Result::Currency",
+  "Kontor::Schema::Result::Gl::Currency",
   { id => "currency_id" },
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
@@ -163,13 +163,13 @@ __PACKAGE__->belongs_to(
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Country>
+Related object: L<Kontor::Schema::Result::Gl::Country>
 
 =cut
 
 __PACKAGE__->has_many(
   "countries_sales_vats",
-  "Kontor::Schema::Gl::Result::Country",
+  "Kontor::Schema::Result::Gl::Country",
   { "foreign.sales_vat" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -178,13 +178,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Country>
+Related object: L<Kontor::Schema::Result::Gl::Country>
 
 =cut
 
 __PACKAGE__->has_many(
   "countries_debitors",
-  "Kontor::Schema::Gl::Result::Country",
+  "Kontor::Schema::Result::Gl::Country",
   { "foreign.debitor" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -193,13 +193,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<Kontor::Schema::Gl::Result::Country>
+Related object: L<Kontor::Schema::Result::Gl::Country>
 
 =cut
 
 __PACKAGE__->has_many(
   "countries_sales",
-  "Kontor::Schema::Gl::Result::Country",
+  "Kontor::Schema::Result::Gl::Country",
   { "foreign.sales" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );

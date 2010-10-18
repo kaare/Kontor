@@ -1,4 +1,4 @@
-package Kontor::Schema::Gl::Result::Batchjournal;
+package Kontor::Schema::Result::Gl::Journal;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -11,11 +11,11 @@ use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-Kontor::Schema::Gl::Result::Batchjournal
+Kontor::Schema::Result::Gl::Journal
 
 =cut
 
-__PACKAGE__->table("batchjournals");
+__PACKAGE__->table("gl.journals");
 
 =head1 ACCESSORS
 
@@ -24,7 +24,7 @@ __PACKAGE__->table("batchjournals");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
-  sequence: 'gl.batchjournals_id_seq'
+  sequence: 'gl.journals_id_seq'
 
 =head2 batch_id
 
@@ -83,7 +83,7 @@ __PACKAGE__->add_columns(
     data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
-    sequence          => "gl.batchjournals_id_seq",
+    sequence          => "gl.journals_id_seq",
   },
   "batch_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
@@ -113,17 +113,32 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
+=head2 batch
+
+Type: belongs_to
+
+Related object: L<Kontor::Schema::Result::Gl::Batch>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "batch",
+  "Kontor::Schema::Result::Gl::Batch",
+  { id => "batch_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
 =head2 ag
 
 Type: belongs_to
 
-Related object: L<Kontor::Schema::Gl::Result::Acctgrid>
+Related object: L<Kontor::Schema::Result::Gl::Acctgrid>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "ag",
-  "Kontor::Schema::Gl::Result::Acctgrid",
+  "Kontor::Schema::Result::Gl::Acctgrid",
   { id => "ag_id" },
   {
     is_deferrable => 1,
@@ -133,24 +148,9 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 batch
-
-Type: belongs_to
-
-Related object: L<Kontor::Schema::Gl::Result::Batch>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "batch",
-  "Kontor::Schema::Gl::Result::Batch",
-  { id => "batch_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
 
 # Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WoE+Rq3Wq8epsQHdm6chsg
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NL5+1mZbgDf8suW3Lxu7cw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
