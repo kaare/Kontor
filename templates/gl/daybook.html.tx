@@ -1,0 +1,125 @@
+<html>
+<body>
+<div class="header">Kasserapport nr <: $row.batchnr :></div>
+<div class="header">Posteringsdato <: $row.postingdate :></div>
+<form method="post">
+	<table>
+		<tr>
+			<td>
+			</td>
+			<th colspan="2">
+				Kasse
+			</th>
+			<th colspan="2">
+				Bank
+			</th>
+		</tr>
+		<tr>
+			<th>
+				Periodens bevægelser
+			</th>
+			<td>
+				<: $x.y :>
+			</td>
+			<td>
+				<: $x.z :>
+			</td>
+			<td>
+				<: $bank.y :>
+			</td>
+			<td>
+				<: $bank.z :>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Primo
+			</th>
+			<td>
+				<: $x.y1 :>
+			</td>
+			<td>
+			</td>
+			<td>
+				<: $bank.y1 :>
+			</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Ultimo
+			</th>
+			<td>
+			</td>
+			<td>
+				<: $x.z1 :>
+			</td>
+			<td>
+			</td>
+			<td>
+				<: $bank.z1 :>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="5">
+				<hr>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Optælling
+			</th>
+			<td colspan="4">
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Difference
+			</th>
+			<td>
+				a<: $a :>
+			</td>
+			<td>
+				b<: $b :>
+			</td>
+			<td>
+				c<: $c :>
+			</td>
+			<td>
+				d<: $d :>
+			</td>
+		</tr>
+	</table>
+		<tr>
+			<th>
+				Linie
+			</th>
+			<th>
+				Dato
+			</th>
+			<th>
+				Bilag
+			</th>
+			<th>
+				Tekst
+			</th>
+			<th>
+				Konto
+			</th>
+			<th>
+				Beløb
+			</th>
+			<th>
+				Modpost
+			</th>
+		</tr>
+	<table>
+	</table>
+	<input type="submit" name="submit" value="OK">
+</form>
+Hello, <: $c.req.param('id') // "Xslate" :> world!
+<br>
+Parm, <: $message :> <--
+</body>
+</html>
