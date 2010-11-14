@@ -14,8 +14,8 @@ sub index {
 
 sub daybook {
     my $self = shift;
-    my $schema = $self->model();
-    my $row = $schema->resultset('Gl::Batch')->create({
+    my $model = $self->model();
+    my $row = $model->resultset('Gl::Batch')->create({
     	org_id => 4,
 		batchnr => 234,
 		postingdate => DateTime->now,
