@@ -1,72 +1,32 @@
 package Kontor;
-use Moose;
-use namespace::autoclean;
 
-use Catalyst::Runtime 5.80;
+use strict;
+use warnings;
+use Kontor::Model;
 
-# Set flags and add plugins for the application
-#
-#         -Debug: activates the debug mode for very useful log messages
-#   ConfigLoader: will load the configuration from a Config::General file in the
-#                 application's home directory
-# Static::Simple: will serve static files from the application's root
-#                 directory
+use base 'Mojolicious';
 
-use Catalyst qw/
-    -Debug
-    ConfigLoader
-    Static::Simple
-/;
+# This method will run once at server start
+sub startup {
+    my $self = shift;
 
-extends 'Catalyst';
+	# Model
+	my $schema = Kontor::Schema->connect('dbi:Pg:dbname=kontor');
+	$self->helper(model => sub { return $schema });
 
-our $VERSION = '0.01';
-$VERSION = eval $VERSION;
+	# Plugins
+	$self->plugin('xslate_renderer');
 
-# Configure the application.
-#
-# Note that settings in kontor.conf (or other external
-# configuration file that you set up manually) take precedence
-# over this when using ConfigLoader. Thus configuration
-# details given here can function as a default configuration,
-# with an external configuration file acting as an override for
-# local deployment.
+    # Routes
+    my $r = $self->routes;
 
-__PACKAGE__->config(
-    name => 'Kontor',
-    # Disable deprecated behavior needed by old applications
-    disable_component_resolution_regex_fallback => 1,
-);
+	# General Ledger
+    $r->route('/gl')->to('gl#index');
+    $r->route('/gl/daybook')->to('gl#daybook');
+    $r->route('/gl/daybook/:id')->to('gl#daybook', id => 1);
 
-# Start the application
-__PACKAGE__->setup();
-
-
-=head1 NAME
-
-Kontor - Catalyst based application
-
-=head1 SYNOPSIS
-
-    script/kontor_server.pl
-
-=head1 DESCRIPTION
-
-[enter your description here]
-
-=head1 SEE ALSO
-
-L<Kontor::Controller::Root>, L<Catalyst>
-
-=head1 AUTHOR
-
-Kaare Rasmussen
-
-=head1 LICENSE
-
-This library is free software. You can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
+    # Default route
+    $r->route('/:controller/:action/:id')->to('example#welcome', id => 1);
+}
 
 1;
