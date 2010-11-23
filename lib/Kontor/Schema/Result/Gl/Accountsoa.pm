@@ -105,5 +105,17 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yfoOUezVSYfDRrBFPeQk8w
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+sub balance {
+    my ($self, $args) = @_;
+    my $schema = $self->result_source->schema;
+    my $coa = $self->coa;
+    my $rowdata = {
+		org_id => 1,
+		dim => $schema->resultset('Gl::Getdimensions')->dimensions($coa->account_nr),
+		currency_id => 208,
+	};
+	my $ag = $schema->resultset('Gl::Acctgrid')->find_or_create($rowdata);
+	return $ag->find_or_create_related('balances',{periodnr => '2010-12-01'});
+}
+
 1;

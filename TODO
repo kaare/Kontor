@@ -1,0 +1,8 @@
+- Kontor::Schema::Result::Gl::Accountsoa
+  Set defaults for org_id. currency_id
+  perhaps even globally in Kontor::Schema, like
+  has 'org_id' => (), has 'currency_id' => ()
+
+  Set defaults for periodnr for balances creation
+
+  Perhaps use a (not yet created) balance method in Kontor::Schema::Result::Gl::Acctgrid
