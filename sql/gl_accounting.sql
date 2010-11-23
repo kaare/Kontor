@@ -3,6 +3,7 @@ SET search_path TO gl;
 -- types
 
 CREATE TYPE accounttypes AS ENUM ('revenue', 'cost', 'asset', 'liability');
+CREATE TYPE accountsoatypes AS ENUM ('pos', 'bank', 'owner');
 CREATE TYPE batchstates AS ENUM ('active', 'accounted');
 CREATE TYPE systemtype AS ENUM ('gl', 'contact', 'product');
 
@@ -112,6 +113,7 @@ CREATE TABLE chartofaccounts (
 CREATE TABLE accountsoas (
 	id						serial PRIMARY KEY,
 	coa_id					integer NOT NULL REFERENCES chartofaccounts (id),
+	type					accountsoatypes,
 	created					timestamp NOT NULL DEFAULT now(),
 	modified				timestamp
 );

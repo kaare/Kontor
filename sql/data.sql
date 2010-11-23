@@ -139,4 +139,14 @@ INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VAL
 INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 26500, 'Skyldig løn', 208, 'asset');
 INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 26600, 'Skyldige feriepenge', 208, 'asset');
 INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 29995, 'Systemkonto', 208, 'asset');
+
+-- Point to bank, kasse, Giro, ...
+INSERT INTO gl.accountsoas (coa_id,type) VALUES (101, 'pos');
+INSERT INTO gl.accountsoas (coa_id,type) VALUES (102, 'bank');
+INSERT INTO gl.accountsoas (coa_id,type) VALUES (103, 'bank');
+
+-- Dimensions
+INSERT INTO gl.dimensions (org_id,dimension,dimtable,dimcolumn) VALUES (1,1,'gl.chartofaccounts','account_nr');
+INSERT INTO gl.dimensions (org_id,dimension,dimtable,dimcolumn) VALUES (1,2,'product.articlegroups','id');
+
 COMMIT;
