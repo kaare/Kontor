@@ -12,6 +12,8 @@ sub startup {
 
 	# Model
 	my $schema = Kontor::Schema->connect('dbi:Pg:dbname=kontor');
+	$schema->org_id(1);
+	$schema->currency_id(208);
 	$self->helper(model => sub { return $schema });
 
 	# Plugins

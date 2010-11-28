@@ -8,3 +8,6 @@ perl -pi -e 's/::(\w+)::(Result)/::$2::$1/;$ns = lc $1 if $1;s/->table\("(\w+)"\
 
 # Create Schema model
 script/kontor_create.pl model Kontor DBIC::Schema Kontor::Schema create=static dbi:Pg:dbname=kontor
+
+# Design
+# http://www.webreg.dk/magnoliaPublic/UNB/Ansoeger_NY/Selv-studie_DK/ToldSkat/Virksomhedsregnskab/Kasserapport.html

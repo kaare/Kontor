@@ -15,11 +15,16 @@ sub index {
 sub daybook {
     my $self = shift;
     my $model = $self->model();
-    my $row = $model->resultset('Gl::Batch')->create({
-    	org_id => 4,
-		batchnr => 234,
-		postingdate => DateTime->now,
-    });
+    my $soas = $model->resultset('Gl::Accountsoa')->search;
+    while (my $soa = $soas->next) {
+    	my $soabal = $soa->balance;
+    }
+    my $row;
+    # my $row = $model->resultset('Gl::Batch')->create({
+    	# org_id => 4,
+		# batchnr => 234,
+		# postingdate => DateTime->now,
+    # });
     # Render template "example/welcome.html.ep" with message
     $self->render(row => $row);
 }

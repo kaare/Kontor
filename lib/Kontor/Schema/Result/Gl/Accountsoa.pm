@@ -109,11 +109,15 @@ sub balance {
     my ($self, $args) = @_;
     my $schema = $self->result_source->schema;
     my $coa = $self->coa;
+use Data::Dumper;
+	my $dims = $schema->resultset('Gl::Getdimensions')->dimensions($coa->account_nr);
+print STDERR Dumper $dims;
     my $rowdata = {
-		org_id => 1,
-		dim => $schema->resultset('Gl::Getdimensions')->dimensions($coa->account_nr),
-		currency_id => 208,
+		org_id => $schema->org_id,
+		dim => $dims,
+		currency_id => $schema->currency_id,
 	};
+print STDERR Dumper $rowdata;
 	my $ag = $schema->resultset('Gl::Acctgrid')->find_or_create($rowdata);
 	return $ag->find_or_create_related('balances',{periodnr => '2010-12-01'});
 }
