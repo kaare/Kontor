@@ -5,61 +5,37 @@
 <form method="post">
 	<table>
 		<tr>
-			<td>
-			</td>
-			<th colspan="2">
-				Kasse
-			</th>
-			<th colspan="2">
-				Bank
-			</th>
+			<td></td>
+			: for $banks -> $bank {
+			<th colspan="2"><: $bank.acctname :></th>
+			: }
 		</tr>
 		<tr>
 			<th>
 				Periodens bevægelser
 			</th>
-			<td>
-				<: $x.y :>
-			</td>
-			<td>
-				<: $x.z :>
-			</td>
-			<td>
-				<: $bank.y :>
-			</td>
-			<td>
-				<: $bank.z :>
-			</td>
+			: for $banks -> $bank {
+			<td align="right"><: $bank.balance.perioddr :></td>
+			<td align="right"><: $bank.balance.periodcr :></td>
+			: }
 		</tr>
 		<tr>
 			<th>
 				Primo
 			</th>
-			<td>
-				<: $x.y1 :>
-			</td>
-			<td>
-			</td>
-			<td>
-				<: $bank.y1 :>
-			</td>
-			<td>
-			</td>
+			: for $banks -> $bank {
+			<td align="right"><: $bank.balance.perioddr :></td>
+			<td></td>
+			: }
 		</tr>
 		<tr>
 			<th>
 				Ultimo
 			</th>
-			<td>
-			</td>
-			<td>
-				<: $x.z1 :>
-			</td>
-			<td>
-			</td>
-			<td>
-				<: $bank.z1 :>
-			</td>
+			: for $banks -> $bank {
+			<td align="right"><: $bank.balance.perioddr :></td>
+			<td></td>
+			: }
 		</tr>
 		<tr>
 			<td colspan="5">
@@ -78,16 +54,16 @@
 				Difference
 			</th>
 			<td>
-				a<: $a :>
+				a<: $ax :>
 			</td>
 			<td>
-				b<: $b :>
+				b<: $bx :>
 			</td>
 			<td>
-				c<: $c :>
+				c<: $cx :>
 			</td>
 			<td>
-				d<: $d :>
+				d<: $dx :>
 			</td>
 		</tr>
 	</table>

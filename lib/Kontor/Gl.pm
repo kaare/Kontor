@@ -16,8 +16,12 @@ sub daybook {
     my $self = shift;
     my $model = $self->model();
     my $soas = $model->resultset('Gl::Accountsoa')->search;
+	my @banks;
     while (my $soa = $soas->next) {
-    	my $soabal = $soa->balance;
+    	push @banks, {
+			acctname => $soa->coa->name,
+			balance => $soa->balance,
+		}
     }
     my $row;
     # my $row = $model->resultset('Gl::Batch')->create({
@@ -26,7 +30,8 @@ sub daybook {
 		# postingdate => DateTime->now,
     # });
     # Render template "example/welcome.html.ep" with message
-    $self->render(row => $row);
+    my $test = [1,2,3];
+    $self->render(row => $row, banks => \@banks);
 }
 
 1;

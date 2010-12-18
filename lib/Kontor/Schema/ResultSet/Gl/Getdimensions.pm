@@ -7,11 +7,8 @@ use base qw/DBIx::Class::ResultSet/;
 
 sub dimensions {
 	my ( $self, $acctstring) = @_;
-
 	my $schema = $self->result_source->schema;
-
-	return $self->search( undef, { bind => [ $acctstring, 1 ] } )->single->dims;
-	# return $self->search( undef, { bind => [ $acctstring, $schema->shop->id ] } )->single->dims;
+	return $self->search( undef, { bind => [ $acctstring, $schema->org_id ] } )->single->dims;
 }
 
 1;

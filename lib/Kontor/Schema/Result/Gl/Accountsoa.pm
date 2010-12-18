@@ -104,21 +104,21 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yfoOUezVSYfDRrBFPeQk8w
 
+use 5.010;
 
 sub balance {
     my ($self, $args) = @_;
     my $schema = $self->result_source->schema;
     my $coa = $self->coa;
-use Data::Dumper;
 	my $dims = $schema->resultset('Gl::Getdimensions')->dimensions($coa->account_nr);
-print STDERR Dumper $dims;
     my $rowdata = {
 		org_id => $schema->org_id,
-		dim => $dims,
+		dim => {-value => $dims},
 		currency_id => $schema->currency_id,
 	};
-print STDERR Dumper $rowdata;
-	my $ag = $schema->resultset('Gl::Acctgrid')->find_or_create($rowdata);
+	my $ag = $schema->resultset('Gl::Acctgrid')->find($rowdata);
+	$rowdata->{dim} = $dims;
+	$ag = $schema->resultset('Gl::Acctgrid')->create($rowdata) unless $ag;
 	return $ag->find_or_create_related('balances',{periodnr => '2010-12-01'});
 }
 
