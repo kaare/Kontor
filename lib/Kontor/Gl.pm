@@ -5,6 +5,8 @@ use strict;
 use warnings;
 use DateTime;
 
+use Kontor::Form::Gl::Daybook;
+
 use base 'Mojolicious::Controller';
 
 sub index {
@@ -29,9 +31,14 @@ sub daybook {
 		# batchnr => 234,
 		# postingdate => DateTime->now,
     # });
-    # Render template "example/welcome.html.ep" with message
-    my $test = [1,2,3];
-    $self->render(row => $row, banks => \@banks);
+	my $form = Kontor::Form::Gl::Daybook->new;
+	my $params = {
+		'difference.0.value' => 1.50,
+		'difference.2.value' => 2.50,
+		'difference.3.value' => 3.50,
+	};
+	$form->process( params => $params );
+    $self->render(row => $row, banks => \@banks, form => $form);
 }
 
 1;

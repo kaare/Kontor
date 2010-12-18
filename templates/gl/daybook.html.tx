@@ -53,18 +53,12 @@
 			<th>
 				Difference
 			</th>
+			: for $form.field('difference').fields -> $difference {
 			<td>
-				a<: $ax :>
+				<: $difference.field('value').render | raw :>
 			</td>
-			<td>
-				b<: $bx :>
-			</td>
-			<td>
-				c<: $cx :>
-			</td>
-			<td>
-				d<: $dx :>
-			</td>
+			<td></td>
+			: }
 		</tr>
 	</table>
 		<tr>
