@@ -141,9 +141,9 @@ INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VAL
 INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 29995, 'Systemkonto', 208, 'asset');
 
 -- Point to bank, kasse, Giro, ...
-INSERT INTO gl.accountsoas (coa_id,type) VALUES (101, 'pos');
-INSERT INTO gl.accountsoas (coa_id,type) VALUES (102, 'bank');
-INSERT INTO gl.accountsoas (coa_id,type) VALUES (103, 'bank');
+INSERT INTO gl.accountsoas (coa_id,type) VALUES (67, 'pos');
+INSERT INTO gl.accountsoas (coa_id,type) VALUES (68, 'bank');
+INSERT INTO gl.accountsoas (coa_id,type) VALUES (69, 'bank');
 
 -- Dimensions
 INSERT INTO gl.dimensions (org_id,dimension,dimtable,dimcolumn) VALUES (1,1,'gl.chartofaccounts','account_nr');

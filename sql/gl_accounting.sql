@@ -8,6 +8,7 @@ CREATE TYPE batchstates AS ENUM ('active', 'accounted');
 CREATE TYPE systemtype AS ENUM ('gl', 'contact', 'product');
 
 -- functions
+-- Return the dimensions given the accounting text, e.g. 12345.67.8
 
 CREATE OR REPLACE FUNCTION get_dimensions(acctnr text, orgid integer) RETURNS integer[] AS $$
 DECLARE
@@ -23,27 +24,26 @@ DECLARE
 BEGIN
 	FOR dimrec IN 
 		SELECT * FROM gl.dimensions WHERE org_id = orgid ORDER BY dimension
-
 	LOOP
-	part      := split_part(acctnr, '.', loop_count);
-	dimtable  := dimrec.dimtable;
-	dimcolumn := dimrec.dimcolumn;
+		part      := split_part(acctnr, '.', loop_count);
+		dimtable  := dimrec.dimtable;
+		dimcolumn := dimrec.dimcolumn;
 
-	IF length(part) > 0 THEN
-		EXECUTE 'SELECT id FROM '||dimtable|| ' WHERE org_id = '||orgid||' AND '||quote_ident(dimcolumn)||'='|| quote_literal(part)
-		INTO id;
+		IF length(part) > 0 THEN
+			EXECUTE 'SELECT id FROM '||dimtable|| ' WHERE org_id = '||orgid||' AND '||quote_ident(dimcolumn)||'='|| quote_literal(part)
+			INTO id;
 
-		GET DIAGNOSTICS rowcount := ROW_COUNT;
-		IF rowcount = 0 THEN
-			RAISE EXCEPTION 'Nonexistent % ID --> % (%)', dimtable, dimcolumn, part;
-		--          id := 0;
+			GET DIAGNOSTICS rowcount := ROW_COUNT;
+			IF rowcount = 0 THEN
+				RAISE EXCEPTION 'Nonexistent % ID --> % (%)', dimtable, dimcolumn, part;
+			--          id := 0;
+			END IF;
+		ELSE
+			id := 0;
 		END IF;
-	ELSE
-		id := 0;
-	END IF;
 
-	id_a[loop_count] := id;
-	loop_count       := loop_count + 1;
+		id_a[loop_count] := id;
+		loop_count       := loop_count + 1;
 	END LOOP;
 
 	RETURN id_a;
@@ -135,7 +135,8 @@ CREATE TABLE acctgrid (
 	dim						integer[],
 	currency_id				integer NOT NULL REFERENCES currencies (id),
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	modified				timestamp,
+	UNIQUE (org_id,dim)
 );
 
 CREATE TABLE balances (

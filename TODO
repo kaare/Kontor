@@ -6,3 +6,9 @@
   Set defaults for periodnr for balances creation
 
   Perhaps use a (not yet created) balance method in Kontor::Schema::Result::Gl::Acctgrid
+
+- Rewrite gl sql functions get_dimensions, get_acctnr
+
+Shortcuts
+- accountsoas, hardcoded periodnr
+  Should be set on login?
