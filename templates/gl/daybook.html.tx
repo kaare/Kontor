@@ -98,7 +98,7 @@
 	<td>1</td>
 </tr>
 	</table>
-<table  id="editgrid" border="1">
+<table id="table1" border="1">
 <thead>
 <tr>
 <th>Header1</th>
@@ -131,39 +131,30 @@ Hello, <: $c.req.param('id') // "Xslate" :> world!
 Parm, <: $message :> <--
 </body>
 <script src="/js/jquery-1.4.2.min.js" type="text/javascript"></script>
-<script src="/js/i18n/grid.locale-en.js" type="text/javascript"></script>
-<script src="/js/jquery.jqGrid.min.js" type="text/javascript"></script>
+<script src="/js/grider.js" type="text/javascript"></script>
 <script type="text/javascript">
 jQuery(document).ready(function(){
-tableToGrid("#editgrid");
+	Grider = {
+		defaults : {
+			initCalc: true,
+			addRow: true,
+			addRowWithTab: true,
+			delRow: true,
+			decimals: 2,
+			addRowText: '<caption><a href="#">Add Row</a></caption>',
+			delRowText: '<td><a href="#" class="delete">delete</a></td>',
+			countRow: false,
+			countRowCol: 0,
+			countRowText: '#',
+			countRowAdd: false,
+			addedRow: false
+		}
+	}
 
-jQuery("#gbox_editgrid").jqGrid({
-        url:'editing.php?q=1',
-        datatype: "xml",
-        colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Closed','Ship via','Notes'],
-        colModel:[
-                {name:'id',index:'id', width:55,editable:false,editoptions:{readonly:true,size:10}},
-                {name:'invdate',index:'invdate', width:80,editable:true,editoptions:{size:10}},
-                {name:'name',index:'name', width:90,editable:true,editoptions:{size:25}},
-                {name:'amount',index:'amount', width:60, align:"right",editable:true,editoptions:{size:10}},
-                {name:'tax',index:'tax', width:60, align:"right",editable:true,editoptions:{size:10}},
-                {name:'total',index:'total', width:60,align:"right",editable:true,editoptions:{size:10}},
-                {name:'closed',index:'closed',width:55,align:'center',editable:true,edittype:"checkbox",editoptions:{value:"Yes:No"}},
-                {name:'ship_via',index:'ship_via',width:70, editable: true,edittype:"select",editoptions:{value:"FE:FedEx;TN:TNT"}},
-                {name:'note',index:'note', width:100, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"20"}}
-        ],
-        rowNum:10,
-        rowList:[10,20,30],
-        pager: '#pagered',
-        sortname: 'id',
-    viewrecords: true,
-    sortorder: "desc",
-    caption:"Editing Example",
-    editurl:"someurl.php"
-});
-        var gr = jQuery("#gbox_editgrid").jqGrid('getGridParam','selrow');
-        if( gr != null ) jQuery("#gbox_editgrid").jqGrid('editGridRow',gr,{height:280,reloadAfterSubmit:false});
-        else alert("Please Select Row");
+	$('#table1').grider({countRow: true, countRowAdd: true});
+	$(this).hide();
+	$('#submit1').attr('disabled', false)
+
 });
 </script>
 </html>
