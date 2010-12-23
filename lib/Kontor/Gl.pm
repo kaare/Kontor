@@ -33,7 +33,6 @@ sub daybook {
     # });
     my $lines = [
 		{
-			linenr => 1,
 			date => '2010-12-24',
 			journalnr => 1,
 			text => 'test',

@@ -12,12 +12,17 @@ jQuery(document).ready(function(){
 			countRowCol: 0,
 			countRowText: '#',
 			countRowAdd: false,
-			addedRow: false
+			addedRow: false,
+			rowFunc: rowDefaults
 		}
 	}
-
 	$('#table1').grider({countRow: true, countRowAdd: true});
-	$(this).hide();
 	$('#submit1').attr('disabled', false)
-
 });
+
+function rowDefaults(tr) {
+	var dt = $(tr).find('td .date');
+	dt.val('2010-12-24');
+	alert(tr.text());
+}
+	

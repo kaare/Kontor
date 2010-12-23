@@ -492,6 +492,7 @@
                 var fila = parseInt($(table).find('tr:not(.noedit):last td:eq('+ config['countRowCol'] +')').html()) + 1;
                 $(tr).find('td:eq('+ config['countRowCol'] +')').html(fila);
             }
+            if (config['rowFunc']) config['rowFunc'](tr);
             $(table).find('tr:not(.noedit):last').after(tr);
             // Register elements that fire events
             setEvents();
