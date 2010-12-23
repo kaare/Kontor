@@ -25,12 +25,23 @@ sub daybook {
 			balance => $soa->balance,
 		}
     }
-    my $row;
-    # my $row = $model->resultset('Gl::Batch')->create({
+    my $batch;
+    # my $batch = $model->resultset('Gl::Batch')->create({
     	# org_id => 4,
 		# batchnr => 234,
 		# postingdate => DateTime->now,
     # });
+    my $lines = [
+		{
+			linenr => 1,
+			date => '2010-12-24',
+			journalnr => 1,
+			text => 'test',
+			accountnr => 123456,
+			amount => 1.25,
+			banks => [(0) x @banks]
+		}
+    ];
 	my $form = Kontor::Form::Gl::Daybook->new;
 	my $params = {
 		'difference.0.value' => 1.50,
@@ -38,7 +49,7 @@ sub daybook {
 		'difference.3.value' => 3.50,
 	};
 	$form->process( params => $params );
-    $self->render(row => $row, banks => \@banks, form => $form);
+    $self->render(batch => $batch, banks => \@banks, lines => $lines, form => $form);
 }
 
 1;

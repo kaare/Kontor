@@ -1,10 +1,10 @@
 <html>
-<link rel="stylesheet" type="text/css" media="screen" href="/css/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/gl/daybook.css" />
 <body>
 <div class="header">Kasserapport nr <: $row.batchnr :></div>
 <div class="header">Posteringsdato <: $row.postingdate :></div>
 <form method="post">
-	<table>
+	<table class="daybook">
 		<tr>
 			<td></td>
 			: for $banks -> $bank {
@@ -62,7 +62,7 @@
 			: }
 		</tr>
 	</table>
-	<table id="editgridx">
+	<table class="daybook" id="table1" border="1">
 		<tr>
 			<th>
 				Linie
@@ -82,79 +82,30 @@
 			<th>
 				Beløb
 			</th>
+			: for $banks -> $bank {
 			<th>
 				Modpost
 			</th>
+			: }
 		</tr>
-<tr>
-	<td>1</td>
-	<td>1</td>
-	<td>1</td>
-	<td>1</td>
-	<td>1</td>
-	<td>1</td>
-	<td>1</td>
-	<td>1</td>
-	<td>1</td>
-</tr>
+		: for $lines -> $line {
+		<tr>
+			<td><input type="text" name="linenr" value="<: $line.linenr :>" size="10"></td>
+			<td><input type="text" name="date" value="<: $line.date :>" size="10"></td>
+			<td><input type="text" name="journalnr" value="<: $line.journalnr :>" size="10"></td>
+			<td><input type="text" name="linetext" value="<: $line.text :>" size="10"></td>
+			<td><input type="text" name="accountnr" value="<: $line.accountnr :>" size="10"></td>
+			<td><input type="text" name="amount" value="<: $line.amount :>" size="10"></td>
+			: for $line.banks -> $bank {
+			<td><input type="text" name="setoff" value="<: $bank :>" size="10"></td>
+			: }
+		</tr>
+			: }
 	</table>
-<table id="table1" border="1">
-<thead>
-<tr>
-<th>Header1</th>
-<th>Header2</th>
-<th>Header3</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cell 11</td>
-<td>Cell 12</td>
-<td>Cell 13</td>
-</tr>
-<tr>
-<td>Cell 21</td>
-<td>Cell 22</td>
-<td>Cell 23</td>
-</tr>
-<tr>
-<td>Cell 31</td>
-<td>Cell 32</td>
-<td>Cell 33</td>
-</tr>
-</tbody>
-</table>
 	<input type="submit" name="submit" value="OK">
 </form>
-Hello, <: $c.req.param('id') // "Xslate" :> world!
-<br>
-Parm, <: $message :> <--
 </body>
 <script src="/js/jquery-1.4.2.min.js" type="text/javascript"></script>
 <script src="/js/grider.js" type="text/javascript"></script>
-<script type="text/javascript">
-jQuery(document).ready(function(){
-	Grider = {
-		defaults : {
-			initCalc: true,
-			addRow: true,
-			addRowWithTab: true,
-			delRow: true,
-			decimals: 2,
-			addRowText: '<caption><a href="#">Add Row</a></caption>',
-			delRowText: '<td><a href="#" class="delete">delete</a></td>',
-			countRow: false,
-			countRowCol: 0,
-			countRowText: '#',
-			countRowAdd: false,
-			addedRow: false
-		}
-	}
-
-	$('#table1').grider({countRow: true, countRowAdd: true});
-	$(this).hide();
-	$('#submit1').attr('disabled', false)
-
-});
-</script>
+<script src="/js/gl/daybook.js" type="text/javascript"></script>
 </html>
