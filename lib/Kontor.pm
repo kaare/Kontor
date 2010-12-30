@@ -32,3 +32,4 @@ sub startup {
 }
 
 1;
+# ABSTRACT: Office accounting
