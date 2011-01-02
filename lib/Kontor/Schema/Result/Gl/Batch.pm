@@ -219,6 +219,46 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OU1MgTHIS95h98GO+qHxjA
 
+use 5.010;
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+sub lines {
+	my ($self) = @_;
+	my $schema = $self->result_source->schema;
+	my @soas = $schema->resultset('Gl::Accountsoa')->search;
+	my $lines = [ map {
+		my $line = $_;
+		my $i;
+		{
+			date => $line->accountingdate,
+			text => $line->description,
+			accountnr => $schema->resultset('Gl::Getacctnr')->acctnr($line->ag->dim), ##
+			banks => [
+				map {
+					my ($debit, $credit);
+					if ((my $amount = $line->soas->[$i++]) >= 0) {
+						$debit = $amount;
+						$credit = 0.00;
+					} else {
+						$debit = 0.00;
+						$credit = -$amount;
+					};
+					{
+						debit => $debit,
+						credit => $credit,
+						name => $_->coa->name,
+					}
+				} @soas
+			]
+		}
+	} $self->batchjournals ];
+	push @$lines, {
+		date => $self->postingdate,
+		# journalnr => 1,
+		# text => 'test',
+		# accountnr => 123456,
+		banks => [map {{debit => 0.00, credit => 0.00, name => $_->coa->name }} @soas]
+	};
+	return $lines;
+}
+
 1;

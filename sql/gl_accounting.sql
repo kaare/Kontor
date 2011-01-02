@@ -194,18 +194,17 @@ CREATE TABLE batches (
 );
 
 CREATE TABLE batchjournals (
-	id						serial PRIMARY KEY,
 	batch_id				integer NOT NULL REFERENCES batches (id)
 							ON DELETE CASCADE
 							ON UPDATE CASCADE,
-	journalnr				integer NOT NULL,
-	ag_id					integer REFERENCES acctgrid (id),
-	dr_amount				numeric,
-	cr_amount				numeric,
-	description				text,
+	linenr					integer NOT NULL,
 	accountingdate			date,
+	description				text,
+	ag_id					integer REFERENCES acctgrid (id),
+	soas					numeric[],
 	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	modified				timestamp,
+	PRIMARY KEY (batch_id,linenr)
 );
 
 CREATE TABLE journals (

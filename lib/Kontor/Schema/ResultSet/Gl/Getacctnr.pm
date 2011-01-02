@@ -11,7 +11,7 @@ sub acctnr {
     $args = '{'.join(',', @$args).'}' if ref $args eq 'ARRAY';
     my $schema = $self->result_source->schema;
 
-    return $self->search( undef, { bind => [ $args, $schema->shop->id ] } )->single->acctnr;
+    return $self->search( undef, { bind => [ $args, $schema->org_id ] } )->single->acctnr;
 }
 
 1;

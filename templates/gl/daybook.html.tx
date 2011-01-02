@@ -4,7 +4,7 @@
 <div class="header">Kasserapport nr <: $row.batchnr :></div>
 <div class="header">Posteringsdato <: $row.postingdate :></div>
 <form method="post">
-	<table class="daybook">
+	<table class="daybook" border="2">
 		<tr>
 			<td></td>
 			: for $banks -> $bank {
@@ -64,36 +64,31 @@
 	</table>
 	<table class="daybook" id="table1" border="1">
 		<tr>
-			<th col="date" >
+			<th col="date">
 				Dato
 			</th>
-			<th col="journalnr" >
+			<th col="journalnr">
 				Bilag
 			</th>
-			<th col="text" >
+			<th col="text">
 				Tekst
 			</th>
-			<th col="accountnr" >
+			<th col="accountnr">
 				Konto
 			</th>
-			<th col="amount" formula="amount" summary="sum">
-				Beløb
-			</th>
 			: for $banks -> $bank {
-			<th col="<: $bank.acctname :>" summary="max">
-				<: $bank.acctname :>
-			</th>
+			<th col="<: $bank.acctname :>debit" summary="sum">Indsat</th>
+			<th col="<: $bank.acctname :>credit" summary="sum">Hævet</th>
 			: }
-		</tr>
 		: for $lines -> $line {
 		<tr id="x">
 			<td><input type="text" name="line[0][date]" value="<: $line.date :>" size="10" class="date"></td>
 			<td><input type="text" name="line[0][journalnr]" value="<: $line.journalnr :>" size="10"></td>
 			<td><input type="text" name="line[0][text]" value="<: $line.text :>" size="10"></td>
 			<td><input type="text" name="line[0][accountnr]" value="<: $line.accountnr :>" size="10"></td>
-			<td><input type="text" name="line[0][amount]" value="<: $line.amount :>" size="10" class="num"></td>
 			: for $line.banks -> $bank {
-			<td><input type="text" name="line[0]setoff" value="<: $bank :>" size="10" class="num"></td>
+			<td><input type="text" name="line[0]<: $bank.name :>debit" value="<: $bank.debit :>" size="10" class="num"></td>
+			<td><input type="text" name="line[0]<: $bank.name :>credit" value="<: $bank.credit :>" size="10" class="num"></td>
 			: }
 		</tr>
 		: }

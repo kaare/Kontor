@@ -17,30 +17,18 @@ sub index {
 sub daybook {
 	my $self = shift;
 	my $model = $self->model();
-	my $soas = $model->resultset('Gl::Accountsoa')->search;
-	my @banks;
-	while (my $soa = $soas->next) {
-		push @banks, {
-			acctname => $soa->coa->name,
-			balance => $soa->balance,
-		}
-	}
-	my $batch;
-	# my $batch = $model->resultset('Gl::Batch')->create({
-		# org_id => 4,
-		# batchnr => 234,
-		# postingdate => DateTime->now,
-	# });
-	my $lines = [
+	my @banks = map {
 		{
-			date => '2010-12-24',
-			journalnr => 1,
-			text => 'test',
-			accountnr => 123456,
-			amount => 1.25,
-			banks => [(0) x @banks]
+			acctname => $_->coa->name,
+			balance => $_->balance,
 		}
-	];
+	} $model->resultset('Gl::Accountsoa')->search;
+	my $batch = $model->resultset('Gl::Batch')->find_or_create({
+		org_id => 1,
+		batchnr => 1,
+		postingdate => DateTime->now,
+	});
+	my $lines = $batch->lines;
 	my $form = Kontor::Form::Gl::Daybook->new;
 	my $params = {
 		'difference.0.value' => 1.50,

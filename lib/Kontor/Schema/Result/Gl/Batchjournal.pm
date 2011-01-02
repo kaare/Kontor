@@ -19,38 +19,20 @@ __PACKAGE__->table("gl.batchjournals");
 
 =head1 ACCESSORS
 
-=head2 id
-
-  data_type: 'integer'
-  is_auto_increment: 1
-  is_nullable: 0
-  sequence: 'gl.batchjournals_id_seq'
-
 =head2 batch_id
 
   data_type: 'integer'
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 journalnr
+=head2 linenr
 
   data_type: 'integer'
   is_nullable: 0
 
-=head2 ag_id
+=head2 accountingdate
 
-  data_type: 'integer'
-  is_foreign_key: 1
-  is_nullable: 1
-
-=head2 dr_amount
-
-  data_type: 'numeric'
-  is_nullable: 1
-
-=head2 cr_amount
-
-  data_type: 'numeric'
+  data_type: 'date'
   is_nullable: 1
 
 =head2 description
@@ -58,9 +40,15 @@ __PACKAGE__->table("gl.batchjournals");
   data_type: 'text'
   is_nullable: 1
 
-=head2 accountingdate
+=head2 ag_id
 
-  data_type: 'date'
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
+=head2 soas
+
+  data_type: 'numeric[]'
   is_nullable: 1
 
 =head2 created
@@ -73,32 +61,23 @@ __PACKAGE__->table("gl.batchjournals");
 =head2 modified
 
   data_type: 'timestamp'
-  is_nullable: 0
+  is_nullable: 1
 
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "gl.batchjournals_id_seq",
-  },
   "batch_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "journalnr",
+  "linenr",
   { data_type => "integer", is_nullable => 0 },
-  "ag_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "dr_amount",
-  { data_type => "numeric", is_nullable => 1 },
-  "cr_amount",
-  { data_type => "numeric", is_nullable => 1 },
-  "description",
-  { data_type => "text", is_nullable => 1 },
   "accountingdate",
   { data_type => "date", is_nullable => 1 },
+  "description",
+  { data_type => "text", is_nullable => 1 },
+  "ag_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "soas",
+  { data_type => "numeric[]", is_nullable => 1 },
   "created",
   {
     data_type     => "timestamp",
@@ -107,9 +86,9 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "modified",
-  { data_type => "timestamp", is_nullable => 0 },
+  { data_type => "timestamp", is_nullable => 1 },
 );
-__PACKAGE__->set_primary_key("id");
+__PACKAGE__->set_primary_key("batch_id", "linenr");
 
 =head1 RELATIONS
 
@@ -137,7 +116,7 @@ __PACKAGE__->belongs_to(
 
 Type: belongs_to
 
-Related object: L<Kontor::Schema::Result::Gl::Batch>
+# Related object: L<Kontor::Schema::Result::Gl::Batch>
 
 =cut
 
@@ -149,8 +128,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WoE+Rq3Wq8epsQHdm6chsg
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-02 20:15:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:T9EijeZPqkbNqdWjDwYcGw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
