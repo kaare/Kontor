@@ -8,7 +8,7 @@ use base 'Mojolicious';
 
 # This method will run once at server start
 sub startup {
-    my $self = shift;
+	my $self = shift;
 
 	# Model
 	my $schema = Kontor::Schema->connect('dbi:Pg:dbname=kontor');
@@ -19,16 +19,16 @@ sub startup {
 	# Plugins
 	$self->plugin('xslate_renderer');
 
-    # Routes
-    my $r = $self->routes;
+	# Routes
+	my $r = $self->routes;
 
 	# General Ledger
-    $r->route('/gl')->to('gl#index');
-    $r->route('/gl/daybook')->to('gl#daybook');
-    $r->route('/gl/daybook/:id')->to('gl#daybook', id => 1);
+	$r->route('/gl')->to('gl#index');
+	$r->route('/gl/daybook')->to('gl#daybook');
+	$r->route('/gl/daybook/:id')->to('gl#daybook', id => 1);
 
-    # Default route
-    $r->route('/:controller/:action/:id')->to('example#welcome', id => 1);
+	# Default route
+	$r->route('/:controller/:action/:id')->to('example#welcome', id => 1);
 }
 
 1;
