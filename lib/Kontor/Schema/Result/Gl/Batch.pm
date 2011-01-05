@@ -229,8 +229,8 @@ sub lines {
 		my $line = $_;
 		my $i;
 		{
-			date => $line->accountingdate,
-			text => $line->description,
+			accountingdate => $line->accountingdate,
+			description => $line->description,
 			accountnr => $schema->resultset('Gl::Getacctnr')->acctnr($line->ag->dim), ##
 			banks => [
 				map {
@@ -252,13 +252,20 @@ sub lines {
 		}
 	} $self->batchjournals ];
 	push @$lines, {
-		date => $self->postingdate,
+		accountingdate => $self->postingdate,
 		# journalnr => 1,
 		# text => 'test',
 		# accountnr => 123456,
 		banks => [map {{debit => 0.00, credit => 0.00, name => $_->coa->name }} @soas]
 	};
 	return $lines;
+}
+
+sub update_lines {
+	my ($self, $data) = @_;
+	my $schema = $self->result_source->schema;
+	for my $line (@$data->{line}) {
+	}
 }
 
 1;

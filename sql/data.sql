@@ -120,8 +120,9 @@ INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VAL
 INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 17100, 'Debitorer', 208, 'liability');
 INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 17200, 'Øvrige tilgodehavender', 208, 'liability');
 INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 18100, 'Kasse', 208, 'liability');
-INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 18200, 'Bank', 208, 'liability');
-INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 18300, 'Giro', 208, 'liability');
+INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 18200, 'Nordea', 208, 'liability');
+INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 18300, 'Danske Bank', 208, 'liability');
+INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 18400, 'Mellemregning', 208, 'liability');
 INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 21100, 'Kapital primo', 208, 'asset');
 INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 23100, 'Kassekredit', 208, 'asset');
 INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VALUES (1, 23300, 'Lån', 208, 'asset');
@@ -144,6 +145,7 @@ INSERT INTO gl.chartofaccounts (org_id, account_nr, name, currency_id, type) VAL
 INSERT INTO gl.accountsoas (coa_id,type) VALUES (67, 'pos');
 INSERT INTO gl.accountsoas (coa_id,type) VALUES (68, 'bank');
 INSERT INTO gl.accountsoas (coa_id,type) VALUES (69, 'bank');
+INSERT INTO gl.accountsoas (coa_id,type) VALUES (70, 'bank');
 
 -- Dimensions
 INSERT INTO gl.dimensions (org_id,dimension,dimtable,dimcolumn) VALUES (1,1,'gl.chartofaccounts','account_nr');

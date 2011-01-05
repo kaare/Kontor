@@ -25,7 +25,7 @@
 				Primo
 			</th>
 			: for $banks -> $bank {
-			<td align="right"><: $bank.balance.perioddr :></td>
+			<td align="right"><: $bank.balance.begindr :></td>
 			<td></td>
 			: }
 		</tr>
@@ -34,7 +34,7 @@
 				Ultimo
 			</th>
 			: for $banks -> $bank {
-			<td align="right"><: $bank.balance.perioddr :></td>
+			<td align="right"><: $bank.balance.begindr + $bank.balance.perioddr - $bank.balance.periodcr :></td>
 			<td></td>
 			: }
 		</tr>
@@ -82,13 +82,13 @@
 			: }
 		: for $lines -> $line {
 		<tr id="x">
-			<td><input type="text" name="line[0][date]" value="<: $line.date :>" size="10" class="date"></td>
-			<td><input type="text" name="line[0][journalnr]" value="<: $line.journalnr :>" size="10"></td>
-			<td><input type="text" name="line[0][text]" value="<: $line.text :>" size="10"></td>
-			<td><input type="text" name="line[0][accountnr]" value="<: $line.accountnr :>" size="10"></td>
+			<td><input type="text" name="line[0]accountingdate" value="<: $line.accountingdate :>" size="10" class="date"></td>
+			<td><input type="text" name="line[0]journalnr" value="<: $line.journalnr :>" size="10"></td>
+			<td><input type="text" name="line[0]description" value="<: $line.description :>" size="10"></td>
+			<td><input type="text" name="line[0]accountnr" value="<: $line.accountnr :>" size="10"></td>
 			: for $line.banks -> $bank {
-			<td><input type="text" name="line[0]<: $bank.name :>debit" value="<: $bank.debit :>" size="10" class="num"></td>
-			<td><input type="text" name="line[0]<: $bank.name :>credit" value="<: $bank.credit :>" size="10" class="num"></td>
+			<td><input type="text" name="line[0]debit.<: $~bank :>" value="<: $bank.debit :>" size="10" class="num"></td>
+			<td><input type="text" name="line[0]credit.<: $~bank :>" value="<: $bank.credit :>" size="10" class="num"></td>
 			: }
 		</tr>
 		: }
