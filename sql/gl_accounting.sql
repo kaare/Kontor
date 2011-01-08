@@ -201,7 +201,7 @@ CREATE TABLE batchjournals (
 	accountingdate			date,
 	description				text,
 	ag_id					integer REFERENCES acctgrid (id),
-	soas					numeric[],
+	amount					numeric[],
 	created					timestamp NOT NULL DEFAULT now(),
 	modified				timestamp,
 	PRIMARY KEY (batch_id,linenr)

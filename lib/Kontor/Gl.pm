@@ -30,11 +30,11 @@ sub daybook {
 	});
 	$self->update_daybook($batch) if $self->req->method eq 'POST';
 	my $lines = $batch->lines;
-	my $form = Kontor::Form::Gl::Daybook->new;
+	my $diff;
+	$diff = shift @{ $lines } if $lines->[0]->{linenr};
 	my $params;
-	$params->{"difference.$_.value"} = 12.50 for (0..$#banks);
-use Data::Dumper;
-say STDERR Dumper $params;
+	$params->{"difference.$_.value"} = $diff ? $diff->{banks}->[$_]->{debit} : 0.00 for (0..$#banks);
+	my $form = Kontor::Form::Gl::Daybook->new;
 	$form->process( params => $params );
 	$self->render(batch => $batch, banks => \@banks, lines => $lines, form => $form);
 }
@@ -58,8 +58,15 @@ sub update_daybook {
 			}
 		}
 	}
-	$batch->update_lines($data);
-say STDERR Dumper $params, $data;
+	# We cheat the difference in as a 0eth line
+	my $diffline = {
+		'debit' => $data->{difference},
+		'accountnr' => 4990,
+		'accountingdate' => DateTime->now,
+		'journalnr' => '0',
+	};
+	unshift @{ $data->{line} }, $diffline;
+	$batch->update_lines($data->{line});
 }
 
 1;

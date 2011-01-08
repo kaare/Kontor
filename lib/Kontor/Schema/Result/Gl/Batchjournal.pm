@@ -46,7 +46,7 @@ __PACKAGE__->table("gl.batchjournals");
   is_foreign_key: 1
   is_nullable: 1
 
-=head2 soas
+=head2 amount
 
   data_type: 'numeric[]'
   is_nullable: 1
@@ -76,7 +76,7 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "ag_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "soas",
+  "amount",
   { data_type => "numeric[]", is_nullable => 1 },
   "created",
   {

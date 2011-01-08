@@ -227,15 +227,16 @@ sub lines {
 	my @soas = $schema->resultset('Gl::Accountsoa')->search;
 	my $lines = [ map {
 		my $line = $_;
-		my $i;
+		my ($linenr, $i);
 		{
+			linenr => ++$linenr,
 			accountingdate => $line->accountingdate,
 			description => $line->description,
 			accountnr => $schema->resultset('Gl::Getacctnr')->acctnr($line->ag->dim), ##
 			banks => [
 				map {
 					my ($debit, $credit);
-					if ((my $amount = $line->soas->[$i++]) >= 0) {
+					if ((my $amount = $line->amount->[$i++]) >= 0) {
 						$debit = $amount;
 						$credit = 0.00;
 					} else {
@@ -262,10 +263,41 @@ sub lines {
 }
 
 sub update_lines {
-	my ($self, $data) = @_;
+	my ($self, $lines) = @_;
 	my $schema = $self->result_source->schema;
-	for my $line (@$data->{line}) {
+	$self->delete_related('batchjournals');
+	my $linenr;
+	for my $line (@{ $lines} ) {
+		$line->{accountnr} =~ s/\D*$// or say $@;
+		next unless $line->{accountnr} and my $coa = $schema->resultset('Gl::Chartofaccount')->find({account_nr => $line->{accountnr}});
+		my $dims = $schema->resultset('Gl::Getdimensions')->dimensions($coa->account_nr);
+		my $ag = $self->get_ag($dims);
+		my @amount;
+		push @amount, $line->{debit}->[$_] - $line->{credit}->[$_] for 0..@{ $line->{debit} }-1;
+		my $linedata = {
+			linenr => $linenr++,
+			accountingdate => $line->{accountingdate},
+			description => $line->{description} || $coa->name,
+			ag_id => $ag->id,
+			amount => \@amount,
+		};
+		$self->create_related('batchjournals', $linedata);
 	}
 }
 
+sub get_ag {
+	my ($self, $dims) = @_;
+	my $schema = $self->result_source->schema;
+	my $rowdata = {
+		org_id => $schema->org_id,
+		dim => {-value => $dims},
+		currency_id => $schema->currency_id,
+	};
+	my $ag = $schema->resultset('Gl::Acctgrid')->find($rowdata);
+	$rowdata->{dim} = $dims;
+	$ag = $schema->resultset('Gl::Acctgrid')->create($rowdata) unless $ag;
+	return $ag;
+	# Leave this for future reference (2011-1-8, not more than 3 months)
+	# return $ag->find_or_create_related('balances',{periodnr => '2010-12-01'});##
+}
 1;
