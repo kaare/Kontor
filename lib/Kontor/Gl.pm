@@ -30,6 +30,7 @@ sub daybook {
 	});
 	$self->update_daybook($batch) if $self->req->method eq 'POST';
 	my $lines = $batch->lines;
+	$self->finish_daybook($batch, $lines) if $self->req->method eq 'POST' && $self->req->params('post');
 	my $diff;
 	$diff = shift @{ $lines } if $lines->[0]->{linenr};
 	my $params;
@@ -67,6 +68,12 @@ sub update_daybook {
 	};
 	unshift @{ $data->{line} }, $diffline;
 	$batch->update_lines($data->{line});
+}
+
+sub finish_daybook {
+	my ($self, $batch, $lines) = @_;
+use Data::Dumper;
+say STDERR Dumper $batch, $lines;
 }
 
 1;

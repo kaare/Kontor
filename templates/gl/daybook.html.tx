@@ -93,7 +93,8 @@
 		</tr>
 		: }
 	</table>
-	<input type="submit" id="submit1" name="submit" value="OK">
+	<input type="submit" id="submit" name="submit" value="OK">
+	<input type="submit" id="submit2" name="post" value="Finished">
 </form>
 </body>
 <script src="/js/jquery-1.4.2.min.js" type="text/javascript"></script>
