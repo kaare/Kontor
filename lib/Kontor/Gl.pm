@@ -19,18 +19,27 @@ sub daybook {
 	my $model = $self->model;
 	my @banks = map {
 		{
+			coa_id => $_->coa_id,
+			acctnr => $_->coa->account_nr,
 			acctname => $_->coa->name,
 			balance => $_->balance,
 		}
 	} $model->resultset('Gl::Accountsoa')->search;
 	my $batch = $model->resultset('Gl::Batch')->find_or_create({
 		org_id => 1,
-		batchnr => 1,
-		postingdate => DateTime->now,
+		status => 'active'
 	});
-	$self->update_daybook($batch) if $self->req->method eq 'POST';
+	if ($self->req->method eq 'POST') {
+		$self->update_daybook($batch);
+		if ($self->req->params('post')) {
+			$self->finish_daybook($batch, \@banks);
+			$batch = $model->resultset('Gl::Batch')->find_or_create({
+				org_id => 1,
+				status => 'active'
+			});
+		}
+	}
 	my $lines = $batch->lines;
-	$self->finish_daybook($batch, $lines) if $self->req->method eq 'POST' && $self->req->params('post');
 	my $diff;
 	$diff = shift @{ $lines } if $lines->[0]->{linenr};
 	my $params;
@@ -61,19 +70,42 @@ sub update_daybook {
 	}
 	# We cheat the difference in as a 0eth line
 	my $diffline = {
-		'debit' => $data->{difference},
-		'accountnr' => 4990,
-		'accountingdate' => DateTime->now,
-		'journalnr' => '0',
+		debit => $data->{difference},
+		accountnr => 4990,
+		accountingdate => DateTime->now,
+		journalnr => 0,
 	};
 	unshift @{ $data->{line} }, $diffline;
+	my $now = DateTime->now;
+	$batch->update({
+#		batchnr => $now->ymd, ## Skulle det virkelig være int?
+		postingdate => $now,
+	});
 	$batch->update_lines($data->{line});
 }
 
 sub finish_daybook {
-	my ($self, $batch, $lines) = @_;
+	my ($self, $batch, $soas) = @_;
+	# $batch->update({
+		# status => 'accounted',
+	# });
 use Data::Dumper;
-say STDERR Dumper $batch, $lines;
+	for my $line (@{ $batch->lines}) {
+		my ($debit, $credit);
+		say STDERR Dumper $line;
+		for my $i (0 .. $#{ $soas }) {
+			my $soa = $soas->[$i];
+			my $bank = $line->{banks}[$i];
+			next unless $bank->{debit} or $bank->{credit};
+
+			$credit += $bank->{debit};
+			$debit += $bank->{credit};
+			say STDERR Dumper $bank, $soa;
+		}
+		next unless $debit or $credit;
+
+		say STDERR Dumper $debit, $credit;
+	}
 }
 
 1;
