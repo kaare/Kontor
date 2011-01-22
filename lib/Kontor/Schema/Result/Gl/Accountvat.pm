@@ -130,5 +130,25 @@ __PACKAGE__->belongs_to(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ui9rcwjKvKCsqHSBhBnCjA
 
 
+=head2 vat
+
+Type: belongs_to
+
+Related object: L<Kontor::Schema::Result::Product::Vat>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "vat",
+  "Kontor::Schema::Result::Product::Vat",
+  { id => "vat_id" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;

@@ -247,6 +247,7 @@ sub lines {
 						debit => $debit,
 						credit => $credit,
 						name => $_->coa->name,
+						accountnr => $_->coa->account_nr,
 					}
 				} @soas
 			]
@@ -268,7 +269,7 @@ sub update_lines {
 	$self->delete_related('batchjournals');
 	my $linenr;
 	for my $line (@{ $lines} ) {
-		$line->{accountnr} =~ s/\D*$// or say $@;
+		$line->{accountnr} =~ s/\D*$// or say $@; ## Should be more intelligent to look up account number!
 		next unless $line->{accountnr} and my $coa = $schema->resultset('Gl::Chartofaccount')->find({account_nr => $line->{accountnr}});
 		my $dims = $schema->resultset('Gl::Getdimensions')->dimensions($coa->account_nr);
 		my $ag = $self->get_ag($dims);
@@ -300,4 +301,43 @@ sub get_ag {
 	# Leave this for future reference (2011-1-8, not more than 3 months)
 	# return $ag->find_or_create_related('balances',{periodnr => '2010-12-01'});##
 }
+
+sub post_it {
+	my ($self, $soas) = @_;
+	my $schema = $self->result_source->schema;
+	# Find data
+	my (@journals, %balance);
+use Data::Dumper;
+	for my $line (@{ $self->lines}) {
+		while (my $bank = shift @{ $line->{banks} }) {
+			next unless $bank->{debit} or $bank->{credit};
+
+			$line->{credit} += $bank->{debit};
+			$line->{debit} += $bank->{credit};
+			$balance{$bank->{accountnr}}{credit} += $bank->{credit};
+			$balance{$bank->{accountnr}}{debit} += $bank->{debit};
+			$bank->{$_} = $line->{$_} for qw/accountingdate description/;
+			$bank->{soa} = 1; # Don't waste time later checking for vat
+			push @journals, $bank;
+		}
+		next unless $line->{debit} or $line->{credit};
+
+		push @journals, $line;
+	}
+	## start transaction
+	## Re-get batch w/lock ?
+say STDERR Dumper \@journals, \%balance;
+	for my $line (@journals) {
+		$self->journals->post($line)
+	}
+	while (my ($accountnr, $numbers) = each %balance) {
+		## Do the balancing
+say STDERR Dumper $accountnr, $numbers;
+	}
+	# $self->update({
+		# status => 'accounted',
+	# });
+	## end transaction
+}
+
 1;

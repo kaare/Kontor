@@ -86,26 +86,7 @@ sub update_daybook {
 
 sub finish_daybook {
 	my ($self, $batch, $soas) = @_;
-	# $batch->update({
-		# status => 'accounted',
-	# });
-use Data::Dumper;
-	for my $line (@{ $batch->lines}) {
-		my ($debit, $credit);
-		say STDERR Dumper $line;
-		for my $i (0 .. $#{ $soas }) {
-			my $soa = $soas->[$i];
-			my $bank = $line->{banks}[$i];
-			next unless $bank->{debit} or $bank->{credit};
-
-			$credit += $bank->{debit};
-			$debit += $bank->{credit};
-			say STDERR Dumper $bank, $soa;
-		}
-		next unless $debit or $credit;
-
-		say STDERR Dumper $debit, $credit;
-	}
+	$batch->post_it($soas);
 }
 
 1;

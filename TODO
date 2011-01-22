@@ -5,6 +5,7 @@ NOW!
   calculate hr colspan (x + y*#banks)
 - Remove usage of HTH, or at least make better use of it.
 - Re above, difference and banks
+- Remove soa_id from gl.batches. Not needed anymore, replaced by soas per line
 
 Later
 - Kontor::Schema::Result::Gl::Accountsoa
