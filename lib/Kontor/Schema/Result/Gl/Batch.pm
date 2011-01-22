@@ -307,7 +307,6 @@ sub post_it {
 	my $schema = $self->result_source->schema;
 	# Find data
 	my (@journals, %balance);
-use Data::Dumper;
 	for my $line (@{ $self->lines}) {
 		while (my $bank = shift @{ $line->{banks} }) {
 			next unless $bank->{debit} or $bank->{credit};
@@ -316,27 +315,27 @@ use Data::Dumper;
 			$line->{debit} += $bank->{credit};
 			$balance{$bank->{accountnr}}{credit} += $bank->{credit};
 			$balance{$bank->{accountnr}}{debit} += $bank->{debit};
-			$bank->{$_} = $line->{$_} for qw/accountingdate description/;
-			$bank->{soa} = 1; # Don't waste time later checking for vat
-			push @journals, $bank;
+			$balance{$bank->{accountnr}}{name} =  $bank->{name};
+			$balance{$bank->{accountnr}}{accountingdate} = $line->{accountingdate};
 		}
 		next unless $line->{debit} or $line->{credit};
 
 		push @journals, $line;
 	}
+	while (my ($accountnr, $line) = each %balance) {
+		$line->{accountnr} = $accountnr;
+		push @journals, $line;
+	}
 	## start transaction
 	## Re-get batch w/lock ?
-say STDERR Dumper \@journals, \%balance;
 	for my $line (@journals) {
+		$line->{batch_id} = $self->id;
 		$self->journals->post($line)
 	}
-	while (my ($accountnr, $numbers) = each %balance) {
-		## Do the balancing
-say STDERR Dumper $accountnr, $numbers;
-	}
-	# $self->update({
-		# status => 'accounted',
-	# });
+	$self->update({
+		# debit, credit
+		status => 'accounted',
+	});
 	## end transaction
 }
 

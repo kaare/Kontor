@@ -17,18 +17,23 @@ sub index {
 sub daybook {
 	my $self = shift;
 	my $model = $self->model;
+	my $batch = $model->resultset('Gl::Batch')->find_or_create({
+		org_id => 1,
+		status => 'active'
+	});
+	my $now = DateTime->now;
+	$batch->update({
+#		batchnr => $now->ymd, ## Skulle det virkelig være int?
+		postingdate => $now,
+	});
 	my @banks = map {
 		{
 			coa_id => $_->coa_id,
 			acctnr => $_->coa->account_nr,
 			acctname => $_->coa->name,
-			balance => $_->balance,
+			balance => $_->balance({periodnr => $batch->postingdate->truncate( to => 'month' )}),
 		}
 	} $model->resultset('Gl::Accountsoa')->search;
-	my $batch = $model->resultset('Gl::Batch')->find_or_create({
-		org_id => 1,
-		status => 'active'
-	});
 	if ($self->req->method eq 'POST') {
 		$self->update_daybook($batch);
 		if ($self->req->params('post')) {
@@ -69,14 +74,14 @@ sub update_daybook {
 		}
 	}
 	# We cheat the difference in as a 0eth line
+	my $now = DateTime->now;
 	my $diffline = {
 		debit => $data->{difference},
 		accountnr => 4990,
-		accountingdate => DateTime->now,
+		accountingdate => $now,
 		journalnr => 0,
 	};
 	unshift @{ $data->{line} }, $diffline;
-	my $now = DateTime->now;
 	$batch->update({
 #		batchnr => $now->ymd, ## Skulle det virkelig være int?
 		postingdate => $now,

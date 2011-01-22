@@ -119,7 +119,7 @@ sub balance {
 	my $ag = $schema->resultset('Gl::Acctgrid')->find($rowdata);
 	$rowdata->{dim} = $dims;
 	$ag = $schema->resultset('Gl::Acctgrid')->create($rowdata) unless $ag;
-	return $ag->find_or_create_related('balances',{periodnr => '2010-12-01'});##
+	return $ag->find_or_create_related('balances',{periodnr => $args->{periodnr}});##
 }
 
 1;

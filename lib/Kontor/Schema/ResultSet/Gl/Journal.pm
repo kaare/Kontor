@@ -1,5 +1,6 @@
 package Kontor::Schema::ResultSet::Gl::Journal;
 
+use 5.010;
 use strict;
 use warnings;
 
@@ -21,18 +22,14 @@ will happen:
 =cut
 
 sub post {
-	my ( $self, $args ) = @_;
+	my ($self, $args) = @_;
 	my $schema = $self->result_source->schema;
-use Data::Dumper;
 	$args->{accountnr} =~ s/\D*$// or say $@; ## Should be more intelligent to look up account number!
 	## And should throw exceptions!
 	die $args unless $args->{accountnr} and my $coa = $schema->resultset('Gl::Chartofaccount')->find({account_nr => $args->{accountnr}});
 
 	# vat
 	if (!$args->{soa} and my ($vat_rate, $vat_accountnr) = $self->get_coavat($coa)) {
-		# my $grid_args = { dim => '{' . $vat_coa->id . '}', currency_id => $args->{currency_id } };
-		# my $acctgrid = $schema->resultset('logicShop::DB::Gl::Acctgrid')->find( $grid_args )
-			# || $schema->resultset('logicShop::DB::Gl::Acctgrid')->create( $grid_args );
 		my $vat_args = {%$args};
 		$vat_args->{accountnr} = $vat_accountnr;
 		for my $elm (qw/debit credit/) {
@@ -41,31 +38,30 @@ use Data::Dumper;
 		}
 		$self->post($vat_args)
 	}
-print STDERR "Post! ", Dumper $args;
-
-#	$self->post_one($journal_args); ## Orig
-	return if $args->{soa};
-
-	## Do the balancing
+	my $ag = $self->get_ag($args->{accountnr});
+	my $journal_args = {
+		batch_id => $args->{batch_id},
+		ag_id => $ag->id,
+		journalnr => $args->{journalnr} // 0, 
+		dr_amount => $args->{debit},
+		cr_amount => $args->{credit},
+		description => $args->{description} || $args->{name},
+		accountingdate => $args->{accountingdate},
+	};
+	my $journal = $self->create($journal_args);
+	$self->balancing($journal);
 }
 
-		# # Balances
-		# my $periodnr = $journal->accountingdate->truncate( to => 'month' );
-		# my $balance = $journal->acctgrid->find_related( 'balances', { periodnr => $periodnr } );
-		# if ($balance) {
-			# $balance->update({
-				# perioddr => $balance->perioddr + $journal->entereddr,
-				# periodcr => $balance->periodcr + $journal->enteredcr,
-			# });
-		# } else {
-			# $balance = $schema->resultset('logicShop::DB::Gl::Balances')->create({
-				# ag_id    => $journal->ag_id,
-				# periodnr => $periodnr,
-				# perioddr => $journal->entereddr,
-				# periodcr => $journal->enteredcr
-			# });
-		# }
-		# $balance->update;
+sub balancing {
+	my ($self, $journal) = @_;
+	my $schema = $self->result_source->schema;
+	my $periodnr = $journal->accountingdate->truncate( to => 'month' );
+	my $balance = $journal->ag->find_or_create_related( 'balances', { periodnr => $periodnr } );
+	$balance->update({
+		perioddr => $balance->perioddr + $journal->dr_amount,
+		periodcr => $balance->periodcr + $journal->cr_amount,
+	});
+}
 
 sub get_coavat {
 	my ( $self, $coa ) = @_;
@@ -76,5 +72,26 @@ sub get_coavat {
 	my $accountnr = $acctvat->vat_coa->account_nr;
 	return $vat, $accountnr;
 }
+
+sub get_ag {
+	my ($self, $accountnr) = @_;
+	my $schema = $self->result_source->schema;
+	$accountnr =~ s/\D*$// or say $@; ## Should be more intelligent to look up account number!
+	die unless $accountnr and my $coa = $schema->resultset('Gl::Chartofaccount')->find({account_nr => $accountnr});
+
+	my $dims = $schema->resultset('Gl::Getdimensions')->dimensions($coa->account_nr);
+	my $rowdata = {
+		org_id => $schema->org_id,
+		dim => {-value => $dims},
+		currency_id => $schema->currency_id,
+	};
+	my $ag = $schema->resultset('Gl::Acctgrid')->find($rowdata);
+	$rowdata->{dim} = $dims;
+	$ag = $schema->resultset('Gl::Acctgrid')->create($rowdata) unless $ag;
+	return $ag;
+	# Leave this for future reference (2011-1-8, not more than 3 months)
+	# return $ag->find_or_create_related('balances',{periodnr => '2010-12-01'});##
+}
+
 
 1;
