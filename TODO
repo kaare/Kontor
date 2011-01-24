@@ -1,11 +1,12 @@
 NOW!
-- Remove usage of HTH, or at least make better use of it.
+- Ajax lookup of accounts (w/caching)
 
 Before it can be used
 User interface
-- Ajax lookup of accounts (w/caching)
 - Styling
 Programmatic
+- Validation
+  MojoX::Validator: http://search.cpan.org/dist/MojoX-Validator/
 - Config
   accountsoas per outlet (replace table)
 - daybook.tx
