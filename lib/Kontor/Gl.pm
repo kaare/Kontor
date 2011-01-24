@@ -5,8 +5,6 @@ use strict;
 use warnings;
 use DateTime;
 
-use Kontor::Form::Gl::Daybook;
-
 use base 'Mojolicious::Controller';
 
 sub index {
@@ -34,9 +32,10 @@ sub daybook {
 			balance => $_->balance({periodnr => $batch->postingdate->truncate( to => 'month' )}),
 		}
 	} $model->resultset('Gl::Accountsoa')->search;
+	# Will we update?
 	if ($self->req->method eq 'POST') {
 		$self->update_daybook($batch);
-		if ($self->req->params('post')) {
+		if ($self->req->param('post')) {
 			$self->finish_daybook($batch, \@banks);
 			$batch = $model->resultset('Gl::Batch')->find_or_create({
 				org_id => 1,
@@ -48,10 +47,8 @@ sub daybook {
 	my $diff;
 	$diff = shift @{ $lines } if $lines->[0]->{linenr};
 	my $params;
-	$params->{"difference.$_.value"} = $diff ? $diff->{banks}->[$_]->{debit} : 0.00 for (0..$#banks);
-	my $form = Kontor::Form::Gl::Daybook->new;
-	$form->process( params => $params );
-	$self->render(batch => $batch, banks => \@banks, lines => $lines, form => $form);
+	push @{ $params->{difference} }, $diff ? $diff->{banks}->[$_]->{debit} : 0.00 for (0..$#banks);
+	$self->render(batch => $batch, banks => \@banks, lines => $lines, form => $params);
 }
 
 sub update_daybook {

@@ -1,10 +1,17 @@
 NOW!
+- Remove usage of HTH, or at least make better use of it.
+
+Before it can be used
+User interface
+- Ajax lookup of accounts (w/caching)
+- Styling
+Programmatic
 - Config
   accountsoas per outlet (replace table)
 - daybook.tx
   calculate hr colspan (x + y*#banks)
-- Remove usage of HTH, or at least make better use of it.
 - Re above, difference and banks
+
 - Remove soa_id from gl.batches. Not needed anymore, replaced by soas per line
 
 Later

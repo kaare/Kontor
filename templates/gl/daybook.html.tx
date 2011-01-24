@@ -54,9 +54,9 @@
 			<th>
 				Difference
 			</th>
-			: for $form.field('difference').fields -> $difference {
+			: for $form.difference -> $difference {
 			<td>
-				<: $difference.field('value').render | raw :>
+				: include base::textfield {name => "difference." ~ $~difference, value => $difference};
 			</td>
 			<td></td>
 			: }

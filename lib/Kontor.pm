@@ -6,7 +6,6 @@ use Kontor::Model;
 
 use base 'Mojolicious';
 
-# This method will run once at server start
 sub startup {
 	my $self = shift;
 
