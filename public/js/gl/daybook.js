@@ -1,4 +1,21 @@
 jQuery(document).ready(function(){
+	$(".accountnr").autocomplete({
+		source: "/gl/coa/lookup",
+/*
+		width: 320,
+		max: 4,
+		highlight: false,
+		scroll: true,
+		scrollHeight: 300,
+		formatItem: function(data, i, n, value) {
+			return "<img src='images/" + value + "'/> " + value.split(".")[0];
+		},
+		formatResult: function(data, value) {
+			return value.split(".")[0];
+		}
+*/
+	});
+
 	Grider = {
 		defaults : {
 			initCalc: true,
@@ -17,7 +34,7 @@ jQuery(document).ready(function(){
 		}
 	}
 	$('#table1').grider({countRow: true, countRowAdd: true});
-	$('#submit1').attr('disabled', false)
+	$('#submit1').attr('disabled', false);
 });
 
 function rowDefaults(tr) {

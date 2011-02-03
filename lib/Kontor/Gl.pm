@@ -91,4 +91,16 @@ sub finish_daybook {
 	$batch->post_it($soas);
 }
 
+sub coa_lookup {
+	my $self = shift;
+	my $params = $self->req->params;
+use Data::Dumper;
+print STDERR Dumper $params;
+	$self->render(json => [
+		"1234",
+		"12345",
+		"123456"
+	]);
+}
+
 1;

@@ -23,6 +23,7 @@ sub startup {
 
 	# General Ledger
 	$r->route('/gl')->to('gl#index');
+	$r->route('/gl/coa/lookup')->to('gl#coa_lookup');
 	$r->route('/gl/daybook')->to('gl#daybook');
 	$r->route('/gl/daybook/:id')->to('gl#daybook', id => 1);
 
