@@ -14,10 +14,12 @@ sub startup {
 	my $config = $self->config;
 	$self->helper(config => sub { return $config });
 	# Model
-	my $schema = Kontor::Schema->connect('dbi:Pg:dbname=kontor');
-	$schema->org_id(1);
-	$schema->currency_id(208);
-	$self->helper(model => sub { return $schema });
+	my $model = Kontor::Model->new({
+		connect_info => $config->{connect_info},
+		org_id => $config->{organisation},
+		currency_id => $config->{currency},
+	});
+	$self->helper(model => sub { return $model });
 
 	# Plugins
 	$self->plugin('xslate_renderer');

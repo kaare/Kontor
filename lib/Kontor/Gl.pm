@@ -53,6 +53,7 @@ sub daybook {
 
 sub update_daybook {
 	my ($self, $batch) = @_;
+	my $config = $self->config;
 	my $params = $self->req->params;
 	my $data;
 	for my $name ($params->param) {
@@ -71,10 +72,11 @@ sub update_daybook {
 		}
 	}
 	# We cheat the difference in as a 0eth line
+	my $diff_coa = $config->{accounts}{difference};
 	my $now = DateTime->now;
 	my $diffline = {
 		debit => $data->{difference},
-		accountnr => 4990,
+		accountnr => $diff_coa,
 		accountingdate => $now,
 		journalnr => 0,
 	};
