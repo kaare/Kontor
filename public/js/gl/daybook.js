@@ -1,21 +1,12 @@
 jQuery(document).ready(function(){
 	$(".accountnr").autocomplete({
 		source: "/gl/coa/lookup",
-/*
-		width: 320,
-		max: 4,
-		highlight: false,
-		scroll: true,
-		scrollHeight: 300,
-		formatItem: function(data, i, n, value) {
-			return "<img src='images/" + value + "'/> " + value.split(".")[0];
-		},
-		formatResult: function(data, value) {
-			return value.split(".")[0];
+		select: function(event, ui) {
+			var itemval = ui.item.value;
+			$(this).val(itemval.replace(/(\s.+)/, ''));
+			return false;
 		}
-*/
 	});
-
 	Grider = {
 		defaults : {
 			initCalc: true,

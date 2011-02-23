@@ -97,9 +97,9 @@ sub coa_lookup {
 use Data::Dumper;
 print STDERR Dumper $params;
 	$self->render(json => [
-		"1234",
-		"12345",
-		"123456"
+		"12345 test",
+		"34324 sfsf",
+		"34534 gdfg",
 	]);
 }
 

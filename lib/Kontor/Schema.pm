@@ -6,7 +6,6 @@ use strict;
 use warnings;
 
 use Moose;
-use MooseX::NonMoose;
 use namespace::autoclean;
 extends 'DBIx::Class::Schema';
 
