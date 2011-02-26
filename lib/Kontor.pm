@@ -1,16 +1,25 @@
 package Kontor;
 
-use strict;
-use warnings;
+use 5.010;
+use Moose;
+use Config::Any;
 use Kontor::Model;
 
-use base 'Mojolicious';
+use Data::Dumper;
+
+has config => (
+	isa => 'HashRef',
+	is => 'rw',
+);
+
+extends 'Mojolicious';
 
 sub startup {
 	my $self = shift;
 
+	$self->_config;
 	# Model
-	my $schema = Kontor::Schema->connect('dbi:Pg:dbname=kontor');
+	my $schema = Kontor::Schema->connect(@{ $self->config->{connect_info} });
 	$schema->org_id(1);
 	$schema->currency_id(208);
 	$self->helper(model => sub { return $schema });
@@ -29,6 +38,14 @@ sub startup {
 
 	# Default route
 	$r->route('/:controller/:action/:id')->to('example#welcome', id => 1);
+}
+
+sub _config {
+	my $self = shift;
+	my $confname = lc(__PACKAGE__) . '.conf';
+	my $config_total = Config::Any->load_files( { files => [$confname], use_ext => 1 } );
+	my $config = $config_total->[0]->{$confname};
+	$self->config($config);
 }
 
 1;
