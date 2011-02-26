@@ -94,12 +94,10 @@ sub finish_daybook {
 sub coa_lookup {
 	my $self = shift;
 	my $params = $self->req->params;
-use Data::Dumper;
-print STDERR Dumper $params;
+	my $searchcoa = $params->param('term');
+	my $searchparams = ($searchcoa =~ /\d+/) ? {account_nr => {'~*' => $searchcoa}} : {name => {'~*' => $searchcoa}};
 	$self->render(json => [
-		"12345 test",
-		"34324 sfsf",
-		"34534 gdfg",
+		map {join ' ', $_->account_nr, $_->name} $self->model->resultset('Gl::Chartofaccount')->search($searchparams, {order_by => 'account_nr'})
 	]);
 }
 
