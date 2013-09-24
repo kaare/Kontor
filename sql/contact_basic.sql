@@ -8,8 +8,8 @@ CREATE TABLE countries (
 	alpha2					varchar(2) UNIQUE,
 	alpha3					varchar(3) UNIQUE,
 	name					varchar(255),
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone
 );
 
 -- Triggers

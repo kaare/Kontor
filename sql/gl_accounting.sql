@@ -99,23 +99,23 @@ $$ LANGUAGE plpgsql;
 
 CREATE TABLE chartofaccounts (
 	id						serial PRIMARY KEY,
-	org_id					integer NOT NULL REFERENCES contact.organisations
+	org_id					integer NOT NULL REFERENCES contact.organisations (id)
 							ON DELETE CASCADE
 							ON UPDATE CASCADE,
 	name					text,
 	type					accounttypes,
 	currency_id				integer NOT NULL REFERENCES currencies (id),
 	account_nr				text,
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone
 );
 
 CREATE TABLE accountsoas (
 	id						serial PRIMARY KEY,
 	coa_id					integer NOT NULL REFERENCES chartofaccounts (id),
 	type					accountsoatypes,
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone
 );
 
 CREATE TABLE accountvat (
@@ -123,8 +123,8 @@ CREATE TABLE accountvat (
 	coa_id					integer REFERENCES chartofaccounts (id),
 	vat_id					integer REFERENCES product.vats (id),
 	vat_coa					integer REFERENCES chartofaccounts (id),
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone
 );
 
 CREATE TABLE acctgrid (
@@ -134,8 +134,8 @@ CREATE TABLE acctgrid (
 							ON UPDATE CASCADE,
 	dim						integer[],
 	currency_id				integer NOT NULL REFERENCES currencies (id),
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp,
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone,
 	UNIQUE (org_id,dim)
 );
 
@@ -146,8 +146,8 @@ CREATE TABLE balances (
 	begincr					numeric DEFAULT 0,
 	perioddr				numeric DEFAULT 0,
 	periodcr				numeric DEFAULT 0,
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp,
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone,
 	PRIMARY KEY (ag_id, periodnr)
 );
 
@@ -159,8 +159,8 @@ CREATE TABLE countries (
 	debitor					integer REFERENCES chartofaccounts (id),
 	vat_id					integer REFERENCES product.vats (id),
 	currency_id				integer,
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone
 );
 
 CREATE TABLE dimensions (
@@ -171,8 +171,8 @@ CREATE TABLE dimensions (
 	dimension				integer,
 	dimtable				text,
 	dimcolumn				text,
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone
 );
 
 CREATE TABLE batches (
@@ -189,8 +189,8 @@ CREATE TABLE batches (
 	totalcr					numeric DEFAULT 0,
 	postingdate				date DEFAULT now(),
 	soa_id					integer REFERENCES accountsoas (id),
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone
 );
 
 CREATE TABLE batchjournals (
@@ -202,8 +202,8 @@ CREATE TABLE batchjournals (
 	description				text,
 	ag_id					integer REFERENCES acctgrid (id),
 	amount					numeric[],
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp,
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone,
 	PRIMARY KEY (batch_id,linenr)
 );
 
@@ -218,8 +218,8 @@ CREATE TABLE journals (
 	cr_amount				numeric,
 	description				text,
 	accountingdate			date,
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone
 );
 
 -- Triggers
