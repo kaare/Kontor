@@ -5,13 +5,13 @@ CREATE TABLE vats (
 	id						serial PRIMARY KEY,
 	label					text,
 	rate					numeric(5,2),
-	start_time				timestamp,
-	end_time				timestamp,
+	start_time				timestamp with time zone,
+	end_time				timestamp with time zone,
 	country_id				int REFERENCES contact.countries (id),
 	sv_coa					integer,
 	pv_coa					integer,
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone
 );
 
 -- Triggers

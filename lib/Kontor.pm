@@ -4,6 +4,7 @@ use 5.010;
 use Moose;
 use Config::Any;
 use Kontor::Model;
+use Config::Any;
 
 use Data::Dumper;
 
@@ -17,12 +18,18 @@ extends 'Mojolicious';
 sub startup {
 	my $self = shift;
 
-	$self->_config;
+	# Config
+	my $config = $self->config;
+	$self->helper(config => sub { return $config });
 	# Model
-	my $schema = Kontor::Schema->connect(@{ $self->config->{connect_info} });
+	my $model = Kontor::Model->new({
+		connect_info => $config->{connect_info},
+		org_id => $config->{organisation},
+		currency_id => $config->{currency},
+	});
 	$schema->org_id(1);
 	$schema->currency_id(208);
-	$self->helper(model => sub { return $schema });
+	$self->helper(model => sub { return $model });
 
 	# Plugins
 	$self->plugin('xslate_renderer');
@@ -40,12 +47,10 @@ sub startup {
 	$r->route('/:controller/:action/:id')->to('example#welcome', id => 1);
 }
 
-sub _config {
-	my $self = shift;
+sub config {
 	my $confname = lc(__PACKAGE__) . '.conf';
-	my $config_total = Config::Any->load_files( { files => [$confname], use_ext => 1 } );
-	my $config = $config_total->[0]->{$confname};
-	$self->config($config);
+	my $config = Config::Any->load_files( { files => [$confname], use_ext => 1 } );
+	return $config->[0]->{$confname};
 }
 
 1;

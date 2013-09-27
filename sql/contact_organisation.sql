@@ -5,8 +5,8 @@ SET search_path TO contact;
 CREATE TABLE organisations (
 	id						serial PRIMARY KEY,
 	currency_id				integer NOT NULL REFERENCES gl.currencies,
-	created					timestamp NOT NULL DEFAULT now(),
-	modified				timestamp
+	created					timestamp with time zone NOT NULL DEFAULT now(),
+	modified				timestamp with time zone
 );
 
 -- Triggers

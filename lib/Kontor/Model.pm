@@ -11,6 +11,21 @@ class_has 'schema' => (
 	is      => 'rw',
 	isa     => 'Kontor::Schema',
 );
+has 'org_id' => (
+	isa => 'Int',
+	is => 'rw',
+);
+has 'currency_id' => (
+	isa => 'Int',
+	is => 'rw',
+);
+
+sub BUILD {
+	my $self = shift;
+	my $schema = $self->schema;
+	$schema->org_id($self->org_id);
+	$schema->currency_id($self->currency_id);
+};
 
 __PACKAGE__->meta()->make_immutable();
 
