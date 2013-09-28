@@ -1,0 +1,23 @@
+#!/usr/bin/env perl
+
+use DBIx::Class::Schema::Loader qw/ make_schema_at /;
+
+use Data::Dumper;
+
+make_schema_at(
+	'Kontor::Schema',
+	{
+		#debug => 1,
+		dump_directory => './lib',
+		db_schema => [qw/contact gl product/],
+		moniker_parts => [qw/schema name/],
+		moniker_map => sub {
+			my ($self, $name) = @_;
+			join '::', ($name =~ /([A-Z][a-z]+)/g);
+		},
+		use_moose => 1,
+	},
+	[
+		'dbi:Pg:dbname="kontor"',
+	],
+);
