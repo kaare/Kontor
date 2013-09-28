@@ -1,17 +1,24 @@
+use utf8;
 package Kontor::Schema::Result::Gl::Batch;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
-use strict;
-use warnings;
-
-use base 'DBIx::Class::Core';
-
-
 =head1 NAME
 
 Kontor::Schema::Result::Gl::Batch
+
+=cut
+
+use strict;
+use warnings;
+
+use Moose;
+use MooseX::NonMoose;
+use MooseX::MarkAsMethods autoclean => 1;
+extends 'DBIx::Class::Core';
+
+=head1 TABLE: C<gl.batches>
 
 =cut
 
@@ -29,6 +36,7 @@ __PACKAGE__->table("gl.batches");
 =head2 org_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 currency_id
@@ -86,15 +94,15 @@ __PACKAGE__->table("gl.batches");
 
 =head2 created
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   default_value: current_timestamp
   is_nullable: 0
   original: {default_value => \"now()"}
 
 =head2 modified
 
-  data_type: 'timestamp'
-  is_nullable: 0
+  data_type: 'timestamp with time zone'
+  is_nullable: 1
 
 =cut
 
@@ -107,7 +115,7 @@ __PACKAGE__->add_columns(
     sequence          => "gl.batches_id_seq",
   },
   "org_id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "currency_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "system",
@@ -133,36 +141,42 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "created",
   {
-    data_type     => "timestamp",
+    data_type     => "timestamp with time zone",
     default_value => \"current_timestamp",
     is_nullable   => 0,
     original      => { default_value => \"now()" },
   },
   "modified",
-  { data_type => "timestamp", is_nullable => 0 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 soa
+=head2 batchjournals
 
-Type: belongs_to
+Type: has_many
 
-Related object: L<Kontor::Schema::Result::Gl::Accountsoa>
+Related object: L<Kontor::Schema::Result::Gl::Batchjournal>
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "soa",
-  "Kontor::Schema::Result::Gl::Accountsoa",
-  { id => "soa_id" },
-  {
-    is_deferrable => 1,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
+__PACKAGE__->has_many(
+  "batchjournals",
+  "Kontor::Schema::Result::Gl::Batchjournal",
+  { "foreign.batch_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 currency
@@ -178,26 +192,11 @@ __PACKAGE__->belongs_to(
   "Kontor::Schema::Result::Gl::Currency",
   { id => "currency_id" },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
   },
-);
-
-=head2 batchjournals
-
-Type: has_many
-
-Related object: L<Kontor::Schema::Result::Gl::Batchjournal>
-
-=cut
-
-__PACKAGE__->has_many(
-  "batchjournals",
-  "Kontor::Schema::Result::Gl::Batchjournal",
-  { "foreign.batch_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 journals
@@ -215,11 +214,52 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 org
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OU1MgTHIS95h98GO+qHxjA
+Type: belongs_to
 
-use 5.010;
+Related object: L<Kontor::Schema::Result::Contact::Organisation>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "org",
+  "Kontor::Schema::Result::Contact::Organisation",
+  { id => "org_id" },
+  { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+=head2 soa
+
+Type: belongs_to
+
+Related object: L<Kontor::Schema::Result::Gl::Accountsoa>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "soa",
+  "Kontor::Schema::Result::Gl::Accountsoa",
+  { id => "soa_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-27 23:51:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:egfDaI08TIwnd5upd2yEWQ
+
+=head1 METHODS
+
+=head2 lines
+
+Find the batch 'lines'
+
+=cut
 
 sub lines {
 	my ($self) = @_;
@@ -263,6 +303,12 @@ sub lines {
 	return $lines;
 }
 
+=head2 update_lines
+
+Update the batch lines
+
+=cut
+
 sub update_lines {
 	my ($self, $lines) = @_;
 	my $schema = $self->result_source->schema;
@@ -286,6 +332,12 @@ sub update_lines {
 	}
 }
 
+=head2 get_ag
+
+Get the account grid
+
+=cut
+
 sub get_ag {
 	my ($self, $dims) = @_;
 	my $schema = $self->result_source->schema;
@@ -301,6 +353,12 @@ sub get_ag {
 	# Leave this for future reference (2011-1-8, not more than 3 months)
 	# return $ag->find_or_create_related('balances',{periodnr => '2010-12-01'});##
 }
+
+=head2 post_it
+
+Post the batch
+
+=cut
 
 sub post_it {
 	my ($self, $soas) = @_;
@@ -339,4 +397,5 @@ sub post_it {
 	## end transaction
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

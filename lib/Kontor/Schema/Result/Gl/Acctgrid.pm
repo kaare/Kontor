@@ -1,17 +1,24 @@
+use utf8;
 package Kontor::Schema::Result::Gl::Acctgrid;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
-use strict;
-use warnings;
-
-use base 'DBIx::Class::Core';
-
-
 =head1 NAME
 
 Kontor::Schema::Result::Gl::Acctgrid
+
+=cut
+
+use strict;
+use warnings;
+
+use Moose;
+use MooseX::NonMoose;
+use MooseX::MarkAsMethods autoclean => 1;
+extends 'DBIx::Class::Core';
+
+=head1 TABLE: C<gl.acctgrid>
 
 =cut
 
@@ -29,6 +36,7 @@ __PACKAGE__->table("gl.acctgrid");
 =head2 org_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 dim
@@ -44,15 +52,15 @@ __PACKAGE__->table("gl.acctgrid");
 
 =head2 created
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   default_value: current_timestamp
   is_nullable: 0
   original: {default_value => \"now()"}
 
 =head2 modified
 
-  data_type: 'timestamp'
-  is_nullable: 0
+  data_type: 'timestamp with time zone'
+  is_nullable: 1
 
 =cut
 
@@ -65,39 +73,51 @@ __PACKAGE__->add_columns(
     sequence          => "gl.acctgrid_id_seq",
   },
   "org_id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "dim",
   { data_type => "integer[]", is_nullable => 1 },
   "currency_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "created",
   {
-    data_type     => "timestamp",
+    data_type     => "timestamp with time zone",
     default_value => \"current_timestamp",
     is_nullable   => 0,
     original      => { default_value => \"now()" },
   },
   "modified",
-  { data_type => "timestamp", is_nullable => 0 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
 );
-__PACKAGE__->set_primary_key("id");
 
-=head1 RELATIONS
+=head1 PRIMARY KEY
 
-=head2 currency
+=over 4
 
-Type: belongs_to
+=item * L</id>
 
-Related object: L<Kontor::Schema::Result::Gl::Currency>
+=back
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "currency",
-  "Kontor::Schema::Result::Gl::Currency",
-  { id => "currency_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
+__PACKAGE__->set_primary_key("id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<acctgrid_org_id_dim_key>
+
+=over 4
+
+=item * L</org_id>
+
+=item * L</dim>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("acctgrid_org_id_dim_key", ["org_id", "dim"]);
+
+=head1 RELATIONS
 
 =head2 balances
 
@@ -129,6 +149,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 currency
+
+Type: belongs_to
+
+Related object: L<Kontor::Schema::Result::Gl::Currency>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "currency",
+  "Kontor::Schema::Result::Gl::Currency",
+  { id => "currency_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
 =head2 journals
 
 Type: has_many
@@ -144,10 +179,26 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 org
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IE68TRz5GQMMeMmLXz+KDQ
+Type: belongs_to
+
+Related object: L<Kontor::Schema::Result::Contact::Organisation>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "org",
+  "Kontor::Schema::Result::Contact::Organisation",
+  { id => "org_id" },
+  { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
+);
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-27 23:51:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:g2Nw0JJH++VzFIQEKeftAg
+
+
+# You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->meta->make_immutable;
 1;

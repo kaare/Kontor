@@ -1,17 +1,24 @@
+use utf8;
 package Kontor::Schema::Result::Gl::Rate;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
-use strict;
-use warnings;
-
-use base 'DBIx::Class::Core';
-
-
 =head1 NAME
 
 Kontor::Schema::Result::Gl::Rate
+
+=cut
+
+use strict;
+use warnings;
+
+use Moose;
+use MooseX::NonMoose;
+use MooseX::MarkAsMethods autoclean => 1;
+extends 'DBIx::Class::Core';
+
+=head1 TABLE: C<gl.rates>
 
 =cut
 
@@ -34,9 +41,9 @@ __PACKAGE__->table("gl.rates");
 
 =head2 ratestate
 
-  data_type: 'activestate'
+  data_type: 'enum'
+  extra: {custom_type_name => "activestate",list => ["active","inactive"]}
   is_nullable: 1
-  size: 4
 
 =head2 rate
 
@@ -53,26 +60,26 @@ __PACKAGE__->table("gl.rates");
 
 =head2 start_time
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   default_value: -infinity
   is_nullable: 1
 
 =head2 end_time
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   default_value: infinity
   is_nullable: 1
 
 =head2 created
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   default_value: current_timestamp
   is_nullable: 1
   original: {default_value => \"now()"}
 
 =head2 modified
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   is_nullable: 1
 
 =cut
@@ -88,7 +95,11 @@ __PACKAGE__->add_columns(
   "label",
   { data_type => "text", default_value => "", is_nullable => 1 },
   "ratestate",
-  { data_type => "activestate", is_nullable => 1, size => 4 },
+  {
+    data_type => "enum",
+    extra => { custom_type_name => "activestate", list => ["active", "inactive"] },
+    is_nullable => 1,
+  },
   "rate",
   {
     data_type => "numeric",
@@ -100,22 +111,37 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "start_time",
   {
-    data_type     => "timestamp",
+    data_type     => "timestamp with time zone",
     default_value => "-infinity",
     is_nullable   => 1,
   },
   "end_time",
-  { data_type => "timestamp", default_value => "infinity", is_nullable => 1 },
+  {
+    data_type     => "timestamp with time zone",
+    default_value => "infinity",
+    is_nullable   => 1,
+  },
   "created",
   {
-    data_type     => "timestamp",
+    data_type     => "timestamp with time zone",
     default_value => \"current_timestamp",
     is_nullable   => 1,
     original      => { default_value => \"now()" },
   },
   "modified",
-  { data_type => "timestamp", is_nullable => 1 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
@@ -132,13 +158,14 @@ __PACKAGE__->belongs_to(
   "currency",
   "Kontor::Schema::Result::Gl::Currency",
   { id => "currency_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:S7K9UrEArfMOWhvkCGnfLw
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-27 23:51:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QTwv4VdH+rs6IsdhptWGIw
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+# You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->meta->make_immutable;
 1;

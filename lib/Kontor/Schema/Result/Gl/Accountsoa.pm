@@ -1,17 +1,24 @@
+use utf8;
 package Kontor::Schema::Result::Gl::Accountsoa;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
-use strict;
-use warnings;
-
-use base 'DBIx::Class::Core';
-
-
 =head1 NAME
 
 Kontor::Schema::Result::Gl::Accountsoa
+
+=cut
+
+use strict;
+use warnings;
+
+use Moose;
+use MooseX::NonMoose;
+use MooseX::MarkAsMethods autoclean => 1;
+extends 'DBIx::Class::Core';
+
+=head1 TABLE: C<gl.accountsoas>
 
 =cut
 
@@ -32,17 +39,23 @@ __PACKAGE__->table("gl.accountsoas");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 type
+
+  data_type: 'gl.accountsoatypes'
+  is_nullable: 1
+  size: 4
+
 =head2 created
 
-  data_type: 'timestamp'
+  data_type: 'timestamp with time zone'
   default_value: current_timestamp
   is_nullable: 0
   original: {default_value => \"now()"}
 
 =head2 modified
 
-  data_type: 'timestamp'
-  is_nullable: 0
+  data_type: 'timestamp with time zone'
+  is_nullable: 1
 
 =cut
 
@@ -56,34 +69,32 @@ __PACKAGE__->add_columns(
   },
   "coa_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "type",
+  { data_type => "gl.accountsoatypes", is_nullable => 1, size => 4 },
   "created",
   {
-    data_type     => "timestamp",
+    data_type     => "timestamp with time zone",
     default_value => \"current_timestamp",
     is_nullable   => 0,
     original      => { default_value => \"now()" },
   },
   "modified",
-  { data_type => "timestamp", is_nullable => 0 },
+  { data_type => "timestamp with time zone", is_nullable => 1 },
 );
-__PACKAGE__->set_primary_key("id");
 
-=head1 RELATIONS
+=head1 PRIMARY KEY
 
-=head2 coa
+=over 4
 
-Type: belongs_to
+=item * L</id>
 
-Related object: L<Kontor::Schema::Result::Gl::Chartofaccount>
+=back
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "coa",
-  "Kontor::Schema::Result::Gl::Chartofaccount",
-  { id => "coa_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
+__PACKAGE__->set_primary_key("id");
+
+=head1 RELATIONS
 
 =head2 batches
 
@@ -100,18 +111,39 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 coa
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-16 14:50:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yfoOUezVSYfDRrBFPeQk8w
+Type: belongs_to
 
-use 5.010;
+Related object: L<Kontor::Schema::Result::Gl::Chartofaccount>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "coa",
+  "Kontor::Schema::Result::Gl::Chartofaccount",
+  { id => "coa_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-27 23:51:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IJcmnfOdJEpN0J/0xCSOfg
+
+=head1 METHODS
+
+=head2 balance
+
+Find or create the related balance row
+
+=cut
 
 sub balance {
-    my ($self, $args) = @_;
-    my $schema = $self->result_source->schema;
-    my $coa = $self->coa;
+	my ($self, $args) = @_;
+	my $schema = $self->result_source->schema;
+	my $coa = $self->coa;
 	my $dims = $schema->resultset('Gl::Getdimensions')->dimensions($coa->account_nr);
-    my $rowdata = {
+	my $rowdata = {
 		org_id => $schema->org_id,
 		dim => {-value => $dims},
 		currency_id => $schema->currency_id,
@@ -119,7 +151,8 @@ sub balance {
 	my $ag = $schema->resultset('Gl::Acctgrid')->find($rowdata);
 	$rowdata->{dim} = $dims;
 	$ag = $schema->resultset('Gl::Acctgrid')->create($rowdata) unless $ag;
-	return $ag->find_or_create_related('balances',{periodnr => $args->{periodnr}});##
+	return $ag->find_or_create_related('balances', {periodnr => $args->{periodnr}});##
 }
 
+__PACKAGE__->meta->make_immutable;
 1;
